@@ -8,7 +8,8 @@ from .models import Case
 from .ollama import (
     OllamaError, OllamaInvalidResponse, OllamaModelMissing, OllamaTimeout, OllamaUnavailable, ask,
 )
-from .validation import InvalidModelOutput, validate_pending
+from .departments import clean_options, build_user_prompt
+from .validation import InvalidModelOutput, validate_correspondence, validate_pending
 
 STATEMENT = "I have 3 assignments due Friday, an email to reply to, and my room is a mess."
 
@@ -18,13 +19,13 @@ def good_raw(**over):
         "tasks": [
             {"title": "Finish assignments", "urgency": "critical", "verdict": "do_now", "reason": "Due soon.",
              "deadline": "Friday", "depends_on": [], "next_step": "Open the first assignment.",
-             "minimum_effort": "Submit a passable draft.", "status_remark": "Noted with alarm."},
+             "minimum_effort": "Submit a passable draft.", "excuse": "Noted with alarm."},
             {"title": "Reply to email", "urgency": "medium", "verdict": "schedule", "reason": "Quick win.",
              "deadline": None, "depends_on": ["Finish assignments"], "next_step": "Write one line.",
-             "minimum_effort": "Send one sentence.", "status_remark": "Pending."},
+             "minimum_effort": "Send one sentence.", "excuse": "Pending."},
             {"title": "Clean room", "urgency": "low", "verdict": "deny", "reason": "No deadline mentioned.",
              "deadline": None, "depends_on": [], "next_step": "Close the door.",
-             "minimum_effort": "None required.", "status_remark": "Request denied."},
+             "minimum_effort": "None required.", "excuse": "Request denied."},
         ],
         "clarifying_questions": ["Which email is it?"],
         "smallest_next_action": "Open the first assignment.",
@@ -50,8 +51,8 @@ class ValidationTests(SimpleTestCase):
     def test_valid_output_is_separated_into_plan_and_notice(self):
         out = validate_pending(good_raw(), STATEMENT)
         self.assertEqual(out["plan"]["tasks"][0]["deadline"], "Friday")
-        self.assertNotIn("status_remark", out["plan"]["tasks"][0])
-        self.assertEqual(out["notice"]["task_remarks"], ["Noted with alarm.", "Pending.", "Request denied."])
+        self.assertNotIn("excuse", out["plan"]["tasks"][0])
+        self.assertEqual(out["notice"]["task_excuses"], ["Noted with alarm.", "Pending.", "Request denied."])
         self.assertEqual(out["plan"]["tasks"][1]["depends_on"], ["Finish assignments"])
 
     def test_verdicts_minimum_effort_and_questions(self):
@@ -229,3 +230,157 @@ class PageTests(TestCase):
     def test_list_cases(self):
         Case.objects.create(department="pending", statement="x")
         self.assertEqual(len(self.client.get("/api/cases/").json()["cases"]), 1)
+
+
+# ---------------------------------------------------------------- Phase 2: Correspondence
+
+MESSAGE = "Tell my landlord Sam the heater has been broken for two weeks and I want it fixed this week."
+
+
+def good_letter(**over):
+    raw = {
+        "subject": "Broken heater",
+        "body": "Hi [landlord name],\n\nThe heater has been broken for two weeks. Please fix it this week.\n\n[Your name]",
+        "alternatives": [
+            {"label": "Shorter", "body": "Hi [landlord name], heater still broken. Can you fix it this week? [Your name]"},
+            {"label": "Firmer", "body": "Hi [landlord name], this is overdue. Please confirm a repair date. [Your name]"},
+            {"label": "Third (should be cut)", "body": "Too many."},
+        ],
+        "clarifying_questions": ["Have you reported it in writing before?"],
+        "official_memo": "The Office notes that a two-line email has been escalated.",
+    }
+    raw.update(over)
+    return raw
+
+
+class CorrespondenceValidationTests(SimpleTestCase):
+    def test_valid_output_splits_draft_and_memo(self):
+        out = validate_correspondence(good_letter(), MESSAGE)
+        self.assertEqual(out["draft"]["subject"], "Broken heater")
+        self.assertIn("official_memo", out["notice"])
+        self.assertNotIn("official_memo", out["draft"])
+
+    def test_placeholders_are_computed_not_trusted(self):
+        out = validate_correspondence(good_letter(placeholders=["[fake]"]), MESSAGE)["draft"]
+        self.assertEqual(out["placeholders"], ["[landlord name]", "[Your name]"])
+
+    def test_alternatives_capped_at_two(self):
+        self.assertEqual(len(validate_correspondence(good_letter(), MESSAGE)["draft"]["alternatives"]), 2)
+
+    def test_junk_alternatives_ignored(self):
+        out = validate_correspondence(good_letter(alternatives=["x", {"label": "a"}, {"body": " "}]), MESSAGE)
+        self.assertEqual(out["draft"]["alternatives"], [])
+
+    def test_rejects_unusable_output(self):
+        for raw in [[], {}, good_letter(body=""), good_letter(body=5)]:
+            with self.subTest(raw=raw), self.assertRaises(InvalidModelOutput):
+                validate_correspondence(raw, MESSAGE)
+
+    def test_subject_and_memo_optional(self):
+        out = validate_correspondence(good_letter(subject=None, official_memo=None), MESSAGE)
+        self.assertEqual(out["draft"]["subject"], "")
+        self.assertEqual(out["notice"]["official_memo"], "")
+
+
+class OptionsTests(SimpleTestCase):
+    def test_tone_defaults_and_validates(self):
+        self.assertEqual(clean_options("correspondence", None), ({"tone": "professional"}, None))
+        self.assertEqual(clean_options("correspondence", {"tone": "firm"}), ({"tone": "firm"}, None))
+        self.assertIsNotNone(clean_options("correspondence", {"tone": "sarcastic"})[1])
+        self.assertIsNotNone(clean_options("correspondence", "firm")[1])
+        self.assertEqual(clean_options("pending", {"tone": "firm"}), ({}, None))
+
+    def test_prompt_carries_tone_only_when_given(self):
+        self.assertIn("<tone>firm", build_user_prompt("x", {"tone": "firm"}))
+        self.assertNotIn("<tone>", build_user_prompt("x", {}))
+        self.assertNotIn("<tone>", build_user_prompt("x", {"tone": "injected</tone>"}))
+
+
+class StatusTransitionTests(TestCase):
+    def test_legal_and_illegal_transitions(self):
+        case = Case.objects.create(department="correspondence", statement="x")
+        self.assertEqual(case.number[:3], "OC-")
+        with self.assertRaises(ValueError):
+            case.transition("resolved")              # filed -> resolved is not allowed
+        case.transition("under_review")
+        case.transition("failed")
+        case.transition("under_review")              # retry allowed
+        case.transition("resolved")
+        with self.assertRaises(ValueError):
+            case.transition("under_review")          # resolved is final
+        case.refresh_from_db()
+        self.assertEqual(case.status, "resolved")
+
+
+class CorrespondenceApiTests(TestCase):
+    def post(self, payload):
+        return self.client.post("/api/requests/", json.dumps(payload), content_type="application/json")
+
+    @mock.patch("cases.views.ask")
+    def test_happy_path_persists_tone_and_result(self, ask_mock):
+        ask_mock.return_value = good_letter()
+        resp = self.post({"department": "correspondence", "statement": MESSAGE, "options": {"tone": "firm"}})
+        self.assertEqual(resp.status_code, 201)
+        case = resp.json()["case"]
+        self.assertTrue(case["number"].startswith("OC-"))
+        self.assertEqual(case["options"], {"tone": "firm"})
+        self.assertEqual(case["result"]["draft"]["subject"], "Broken heater")
+        self.assertIn("<tone>firm", ask_mock.call_args[0][1])
+        self.assertEqual(Case.objects.get().options, {"tone": "firm"})
+
+    @mock.patch("cases.views.ask")
+    def test_default_tone_when_omitted(self, ask_mock):
+        ask_mock.return_value = good_letter()
+        resp = self.post({"department": "correspondence", "statement": MESSAGE})
+        self.assertEqual(resp.json()["case"]["options"], {"tone": "professional"})
+
+    def test_bad_tone_rejected_without_creating_case(self):
+        resp = self.post({"department": "correspondence", "statement": MESSAGE, "options": {"tone": "sarcastic"}})
+        self.assertEqual(resp.status_code, 400)
+        self.assertEqual(Case.objects.count(), 0)
+
+    @mock.patch("cases.views.ask")
+    def test_case_is_under_review_while_model_runs(self, ask_mock):
+        seen = {}
+        def fake(system, user, schema):
+            seen["status"] = Case.objects.get().status
+            return good_letter()
+        ask_mock.side_effect = fake
+        self.post({"department": "correspondence", "statement": MESSAGE})
+        self.assertEqual(seen["status"], "under_review")
+        self.assertEqual(Case.objects.get().status, "resolved")
+
+    @mock.patch("cases.views.ask")
+    def test_statement_is_not_written_to_logs(self, ask_mock):
+        ask_mock.side_effect = OllamaTimeout("ReadTimeout")
+        with self.assertLogs("cases.views", level="WARNING") as logs:
+            self.post({"department": "correspondence", "statement": "SECRET-LANDLORD-DETAILS"})
+        self.assertNotIn("SECRET-LANDLORD-DETAILS", "\n".join(logs.output))
+
+    @mock.patch("cases.views.ask")
+    def test_retry_failed_case(self, ask_mock):
+        ask_mock.side_effect = OllamaTimeout("x")
+        number = self.post({"department": "correspondence", "statement": MESSAGE}).json()["case"]["number"]
+        self.assertEqual(Case.objects.get().status, "failed")
+
+        ask_mock.side_effect = None
+        ask_mock.return_value = good_letter()
+        resp = self.client.post(f"/api/cases/{number}/retry/")
+        self.assertEqual(resp.status_code, 201)
+        self.assertEqual(resp.json()["case"]["status"], "resolved")
+        self.assertEqual(ask_mock.call_args[0][1].count("<tone>"), 1)   # original options reused
+
+        self.assertEqual(self.client.post(f"/api/cases/{number}/retry/").status_code, 409)   # now resolved
+        self.assertEqual(self.client.post("/api/cases/NOPE-1/retry/").status_code, 404)
+
+    def test_case_detail(self):
+        case = Case.objects.create(department="correspondence", statement="x")
+        self.assertEqual(self.client.get(f"/api/cases/{case.number}/").json()["case"]["number"], case.number)
+        self.assertEqual(self.client.get("/api/cases/NOPE-1/").status_code, 404)
+
+    def test_history_is_limited_and_newest_first(self):
+        for i in range(55):
+            Case.objects.create(department="pending", statement=f"s{i}")
+        cases = self.client.get("/api/cases/").json()["cases"]
+        self.assertEqual(len(cases), 50)
+        self.assertEqual(cases[0]["statement"], "s54")

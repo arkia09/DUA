@@ -72,7 +72,7 @@ def validate_pending(raw, statement):
             "next_step": _text(t.get("next_step"), "next_step"),
             "minimum_effort": _text(t.get("minimum_effort"), "minimum_effort"),
         })
-        remarks.append(_text(t.get("status_remark"), "status_remark", required=False))
+        remarks.append(_text(t.get("excuse"), "excuse", required=False))
 
     # Dependencies should refer to listed tasks; drop dangling references.
     titles = {_norm(t["title"]) for t in tasks}
@@ -97,6 +97,62 @@ def validate_pending(raw, statement):
         },
         "notice": {
             "official_notice": _text(raw.get("official_notice"), "official_notice", MAX_NOTICE, required=False),
-            "task_remarks": remarks,
+            "task_excuses": remarks,
+        },
+    }
+
+
+MAX_BODY = 4000
+MAX_ALTERNATIVES = 2
+PLACEHOLDER = re.compile(r"\[[^\[\]\n]{1,40}\]")
+
+
+def _placeholders(*texts):
+    seen = []
+    for t in texts:
+        for m in PLACEHOLDER.findall(t):
+            if m not in seen:
+                seen.append(m)
+    return seen
+
+
+def validate_correspondence(raw, statement):
+    """Return {"draft": {...useful...}, "notice": {...humour...}} or raise InvalidModelOutput."""
+    if not isinstance(raw, dict):
+        raise InvalidModelOutput("not an object")
+
+    body = _text(raw.get("body"), "body", MAX_BODY)
+    subject = _text(raw.get("subject"), "subject", 200, required=False)
+
+    alternatives = []
+    alts = raw.get("alternatives")
+    if isinstance(alts, list):
+        for a in alts:
+            if not isinstance(a, dict):
+                continue
+            ab = a.get("body")
+            if isinstance(ab, str) and ab.strip():
+                alternatives.append({
+                    "label": _text(a.get("label"), "label", 60, required=False) or "Alternative",
+                    "body": ab.strip()[:MAX_BODY],
+                })
+            if len(alternatives) == MAX_ALTERNATIVES:
+                break
+
+    questions = raw.get("clarifying_questions")
+    questions = [q.strip()[:MAX_TEXT] for q in questions if isinstance(q, str) and q.strip()][:MAX_QUESTIONS] \
+        if isinstance(questions, list) else []
+
+    return {
+        "draft": {
+            "subject": subject,
+            "body": body,
+            "alternatives": alternatives,
+            # computed here, not trusted from the model: details the applicant must still fill in
+            "placeholders": _placeholders(subject, body, *[a["body"] for a in alternatives]),
+            "clarifying_questions": questions,
+        },
+        "notice": {
+            "official_memo": _text(raw.get("official_memo"), "official_memo", MAX_NOTICE, required=False),
         },
     }

@@ -22,11 +22,20 @@ class Case(models.Model):
         ("failed", "Failed"),
     ]
 
+    # Legal status changes. Resolved is final; a failed case may be re-reviewed.
+    TRANSITIONS = {
+        "filed": {"under_review"},
+        "under_review": {"resolved", "failed"},
+        "failed": {"under_review"},
+        "resolved": set(),
+    }
+
     number = models.CharField(max_length=20, unique=True, null=True, blank=True, editable=False)
     department = models.CharField(max_length=20, choices=DEPARTMENTS)
     statement = models.TextField()
     status = models.CharField(max_length=20, choices=STATUSES, default="filed")
     result = models.JSONField(null=True, blank=True)
+    options = models.JSONField(default=dict, blank=True)  # e.g. {"tone": "firm"}
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
@@ -34,3 +43,10 @@ class Case(models.Model):
         if not self.number:
             self.number = f"{PREFIXES[self.department]}-{2047 + self.pk}"
             super().save(update_fields=["number"])
+
+    def transition(self, new_status):
+        """Move to new_status (saving the case), or raise ValueError if the move is not allowed."""
+        if new_status not in self.TRANSITIONS.get(self.status, set()):
+            raise ValueError(f"Illegal status change: {self.status} -> {new_status}")
+        self.status = new_status
+        self.save()

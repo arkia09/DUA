@@ -26,8 +26,11 @@
   .critical { color:#8b0000; } .high { color:#b4540a; } .medium { color:#6b5b00; } .low { color:var(--ok); }
   dl { margin:6px 0 0; } dt { font-weight:bold; font-size:.85rem; text-transform:uppercase; }
   dd { margin:0 0 6px; }
-  .notice { background:#fff7d6; border:2px dashed var(--accent); padding:12px; font-style:italic; }
+  .notice { margin-bottom:16px; background:#fff7d6; border:2px dashed var(--accent); padding:12px; font-style:italic; }
   .notice small { display:block; font-style:normal; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); }
+  blockquote.excuse { margin:6px 0 8px; padding:8px 12px; background:#fff7d6; border-left:4px solid var(--accent); font-style:italic; }
+  blockquote.excuse small { display:block; font-style:normal; text-transform:uppercase; letter-spacing:.08em; font-size:.7rem; color:var(--accent); }
+  .serious { font-weight:bold; font-size:.85rem; text-transform:uppercase; letter-spacing:.08em; border-top:1px dashed var(--rule); padding-top:6px; margin-top:4px; }
   .remark { font-style:italic; color:#555; font-size:.9rem; margin-top:6px; }
   .stamp { display:inline-block; padding:0 8px; margin-right:6px; font-size:.75rem; font-weight:bold; letter-spacing:.08em;
            text-transform:uppercase; border:2px solid currentColor; transform:rotate(-2deg); }
@@ -35,6 +38,22 @@
   .v-defer { color:#6b5b00; } .v-deny { color:#555; text-decoration:line-through; }
   .excused h3 { opacity:.85; }
   .questions { background:#eef3f8; border:1px solid #9db4cc; padding:10px 14px; margin-top:12px; }
+  .tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  .tabs label { font-weight:normal; border:1px solid var(--ink); padding:6px 12px; cursor:pointer; background:#fffdf6; margin:0; }
+  .tabs input { position:absolute; opacity:0; }
+  .tabs input:checked + span { font-weight:bold; text-decoration:underline; }
+  .tabs label:has(input:checked) { background:var(--ink); color:#fff; }
+  .tabs label:has(input:focus-visible) { outline:3px solid var(--accent); outline-offset:2px; }
+  .toneRow { margin-top:10px; } select { font:inherit; padding:4px 8px; margin-left:6px; }
+  pre.draft { white-space:pre-wrap; word-wrap:break-word; font:inherit; background:#fffdf6; border:1px solid var(--rule); padding:12px; margin:6px 0; }
+  .fill { color:var(--accent); font-size:.9rem; }
+  button.small { margin:4px 8px 4px 0; padding:4px 10px; font-size:.85rem; }
+  details { margin-top:8px; } summary { cursor:pointer; font-weight:bold; }
+  .history ul { list-style:none; margin:0; padding:0; } .history li { border-top:1px solid var(--rule); }
+  .history button.row { display:block; width:100%; text-align:left; background:none; color:inherit; margin:0; padding:8px 4px; }
+  .history button.row:hover { background:#efe8d2; }
+  .meta { font-size:.8rem; color:#555; }
+  .st-failed { color:var(--accent); } .st-resolved { color:var(--ok); }
   .next { border-left:4px solid var(--ok); padding-left:10px; }
 </style>
 </head>
@@ -42,113 +61,244 @@
 <main>
   <header>
     <h1>Department of Unnecessary Affairs</h1>
-    <p class="sub">Bureau of Pending Affairs &mdash; Form BA-1: Declaration of Things Not Yet Done</p>
+    <p class="sub">Official forms for avoiding things, efficiently</p>
   </header>
 
   <form id="form" class="sheet">
-    <label for="statement">Describe everything you have yet to do, in any order or state of panic:</label>
-    <textarea id="statement" maxlength="{{ max_chars }}" required
-      placeholder="e.g. 3 assignments due Friday, need to reply to an email, and my room needs cleaning before my parents visit on Sunday"></textarea>
+    <div class="tabs" role="radiogroup" aria-label="Department">
+      <label><input type="radio" name="dept" value="pending" checked><span>Bureau of Pending Affairs</span></label>
+      <label><input type="radio" name="dept" value="correspondence"><span>Office of Correspondence Avoidance</span></label>
+    </div>
+    <label for="statement" id="prompt">Describe everything you have yet to do, in any order or state of panic:</label>
+    <textarea id="statement" maxlength="{{ max_chars }}" required></textarea>
+    <div class="toneRow" id="toneRow" hidden>
+      <label for="tone" style="display:inline">Tone:</label>
+      <select id="tone">{% for t in tones %}<option value="{{ t }}">{{ t|capfirst }}</option>{% endfor %}</select>
+    </div>
     <span class="counter" id="counter" aria-live="off"></span>
     <button id="submit" type="submit">File declaration</button>
   </form>
 
   <div id="out" aria-live="polite"></div>
+
+  <section class="sheet history" id="history" aria-labelledby="hist-h">
+    <h2 id="hist-h" style="margin-top:0">Case files</h2>
+    <p class="meta" id="histEmpty">No cases on file. The archive is, regrettably, spotless.</p>
+    <ul id="histList"></ul>
+  </section>
 </main>
 <script>
 const form = document.getElementById("form"), ta = document.getElementById("statement"),
       btn = document.getElementById("submit"), out = document.getElementById("out"),
-      counter = document.getElementById("counter"), MAX = {{ max_chars }};
+      counter = document.getElementById("counter"), MAX = {{ max_chars }},
+      toneRow = document.getElementById("toneRow"), tone = document.getElementById("tone"),
+      promptEl = document.getElementById("prompt");
 
+const DEPTS = {
+  pending: {
+    name: "Bureau of Pending Affairs", button: "File declaration",
+    prompt: "Describe everything you have yet to do, in any order or state of panic:",
+    placeholder: "e.g. 3 assignments due Friday, need to reply to an email, and my room needs cleaning before my parents visit on Sunday",
+  },
+  correspondence: {
+    name: "Office of Correspondence Avoidance", button: "Request a memorandum",
+    prompt: "Who must you write to, and what do you need to say? (Rough notes are fine.)",
+    placeholder: "e.g. Tell my landlord the heater has been broken for two weeks and I'd like it fixed this week, politely but firmly",
+  },
+};
+const dept = () => document.querySelector('input[name="dept"]:checked').value;
+
+/* ---------- small DOM helpers (textContent only: model output is untrusted) ---------- */
 function el(tag, cls, text) {
   const e = document.createElement(tag);
   if (cls) e.className = cls;
-  if (text !== undefined) e.textContent = text;   // textContent only: model output is untrusted
+  if (text !== undefined) e.textContent = text;
   return e;
 }
 function row(dl, term, value) {
   if (!value) return;
   dl.append(el("dt", "", term), el("dd", "", value));
 }
-ta.addEventListener("input", () => counter.textContent = ta.value.length + " / " + MAX);
-ta.dispatchEvent(new Event("input"));
-
-function showError(msg) {
-  out.replaceChildren(el("div", "sheet error", msg));
+/* Shared "official notice" component: every department's humour goes through this. */
+function officialNotice(label, text) {
+  if (!text) return null;
+  const n = el("aside", "notice");
+  n.append(el("small", "", label + " \u2014 for entertainment purposes only"), document.createTextNode(text));
+  return n;
+}
+function questionsBox(qs) {
+  if (!qs || !qs.length) return null;
+  const q = el("div", "questions");
+  q.append(el("strong", "", "The Bureau cannot proceed without knowing:"));
+  const ul = el("ul");
+  qs.forEach(x => ul.append(el("li", "", x)));
+  q.append(ul);
+  return q;
+}
+function copyButton(getText) {
+  const b = el("button", "small", "Copy");
+  b.type = "button";
+  b.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(getText()); b.textContent = "Copied"; }
+    catch (e) { b.textContent = "Copy failed"; }
+    setTimeout(() => b.textContent = "Copy", 1500);
+  });
+  return b;
 }
 
-function render(data) {
-  const c = data.case, r = c.result, frag = document.createDocumentFragment();
+/* ---------- renderers ---------- */
+const LABELS = {do_now: "Do now", schedule: "Schedule", delegate: "Delegate", defer: "Deferred", deny: "Denied"};
 
-  const plan = el("section", "sheet");
-  plan.append(el("h2", "", "Case " + c.number + " — Action Plan"));
+function renderPending(c, frag) {
+  const r = c.result, plan = el("section", "sheet");
+  plan.append(el("h2", "", "Case " + c.number + " \u2014 Action Plan"));
   const next = el("p", "next");
   next.append(el("strong", "", "Start here (under 5 minutes): "), document.createTextNode(r.plan.smallest_next_action));
   plan.append(next);
 
-  const LABELS = {do_now: "Do now", schedule: "Schedule", delegate: "Delegate", defer: "Deferred", deny: "Denied"};
-  const active = [], excused = [];
-  r.plan.tasks.forEach((t, i) => (["defer", "deny"].includes(t.verdict) ? excused : active).push([t, i]));
+  const excusedV = ["defer", "deny"], active = [], excused = [];
+  r.plan.tasks.forEach((t, i) => (excusedV.includes(t.verdict) ? excused : active).push([t, i]));
 
-  function addTask(parent, t, i, n) {
-    const box = el("div", "task" + (["defer", "deny"].includes(t.verdict) ? " excused" : ""));
+  function addTask(t, i, n) {
+    const box = el("div", "task" + (excusedV.includes(t.verdict) ? " excused" : ""));
     const h = el("h3");
-    h.append(el("span", "stamp v-" + t.verdict, LABELS[t.verdict]), el("span", "badge " + t.urgency, t.urgency),
+    h.append(el("span", "stamp v-" + t.verdict, LABELS[t.verdict] || t.verdict), el("span", "badge " + t.urgency, t.urgency),
              document.createTextNode(n + ". " + t.title));
     box.append(h);
+    const excuse = (r.notice.task_excuses || r.notice.task_remarks || [])[i];   // task_remarks: older cases
+    if (excuse) {
+      const q = el("blockquote", "excuse");
+      q.append(el("small", "", "Official excuse (fictional; do not submit to your teacher)"), document.createTextNode("\u201c" + excuse + "\u201d"));
+      box.append(q);
+    }
+    box.append(el("div", "serious", "On a serious note\u2026"));
     const dl = el("dl");
     row(dl, "Deadline (as you stated)", t.deadline);
     row(dl, "Why", t.reason);
     row(dl, "Next step", t.next_step);
     row(dl, "Minimum effort to be done", t.minimum_effort);
-    row(dl, "Do these first", t.depends_on.join("; "));
+    row(dl, "Do these first", (t.depends_on || []).join("; "));
     box.append(dl);
-    const remark = r.notice.task_remarks[i];
-    if (remark) box.append(el("div", "remark", "Status: " + remark));
-    parent.append(box);
+    plan.append(box);
   }
-  active.forEach(([t, i], k) => addTask(plan, t, i, k + 1));
+  active.forEach(([t, i], k) => addTask(t, i, k + 1));
   if (excused.length) {
     plan.append(el("h3", "", "Officially excused (you may skip these)"));
-    excused.forEach(([t, i], k) => addTask(plan, t, i, k + 1));
+    excused.forEach(([t, i], k) => addTask(t, i, k + 1));
   }
-  const qs = r.plan.clarifying_questions || [];
-  if (qs.length) {
-    const q = el("div", "questions");
-    q.append(el("strong", "", "The Bureau cannot proceed without knowing:"));
-    const ul = el("ul");
-    qs.forEach(x => ul.append(el("li", "", x)));
-    q.append(ul);
-    plan.append(q);
-  }
+  const q = questionsBox(r.plan.clarifying_questions);
+  if (q) plan.append(q);
   frag.append(plan);
+  const n = officialNotice("Official notice", r.notice.official_notice);
+  if (n) frag.append(n);
+}
 
-  if (r.notice.official_notice) {
-    const n = el("aside", "notice");
-    n.append(el("small", "", "Official notice — for entertainment purposes only"), document.createTextNode(r.notice.official_notice));
-    frag.append(n);
+function renderCorrespondence(c, frag) {
+  const r = c.result, d = r.draft, sheet = el("section", "sheet");
+  sheet.append(el("h2", "", "Case " + c.number + " \u2014 Your Message"));
+  if (c.options && c.options.tone) sheet.append(el("p", "meta", "Tone: " + c.options.tone));
+
+  const full = (subject, body) => (subject ? "Subject: " + subject + "\n\n" : "") + body;
+  if (d.subject) sheet.append(el("div", "", "Subject: " + d.subject));
+  sheet.append(el("pre", "draft", d.body), copyButton(() => full(d.subject, d.body)));
+  if (d.placeholders && d.placeholders.length) {
+    sheet.append(el("p", "fill", "Fill in before sending: " + d.placeholders.join(" ")));
+  }
+  (d.alternatives || []).forEach(a => {
+    const det = el("details");
+    det.append(el("summary", "", "Alternative: " + a.label), el("pre", "draft", a.body), copyButton(() => full(d.subject, a.body)));
+    sheet.append(det);
+  });
+  const q = questionsBox(d.clarifying_questions);
+  if (q) sheet.append(q);
+  frag.append(sheet);
+  const n = officialNotice("Internal memorandum", r.notice.official_memo);
+  if (n) frag.append(n);
+}
+
+function renderCase(c, notice) {
+  const frag = document.createDocumentFragment();
+  try {
+    if (c.status === "failed") {
+      const box = el("div", "sheet error");
+      box.append(el("p", "", (notice ? notice + " " : "") + "Case " + c.number + " could not be completed."));
+      const b = el("button", "small", "Send back for review");
+      b.type = "button";
+      b.addEventListener("click", () => retry(c.number));
+      box.append(b);
+      frag.append(box);
+    } else if (c.result && c.result.plan) renderPending(c, frag);
+    else if (c.result && c.result.draft) renderCorrespondence(c, frag);
+    else frag.append(el("div", "sheet", "Case " + c.number + " is on file, but its record is in an older format and cannot be displayed."));
+  } catch (e) {
+    frag.append(el("div", "sheet error", "Case " + c.number + " is on file, but its record could not be displayed."));
   }
   out.replaceChildren(frag);
 }
 
-form.addEventListener("submit", async (ev) => {
-  ev.preventDefault();
-  btn.disabled = true;
-  out.replaceChildren(el("div", "sheet", "Your declaration is being reviewed by an officer. Please remain seated…"));
+function showMessage(msg, isError) { out.replaceChildren(el("div", isError ? "sheet error" : "sheet", msg)); }
+
+/* ---------- history ---------- */
+const histList = document.getElementById("histList"), histEmpty = document.getElementById("histEmpty");
+async function loadHistory() {
   try {
-    const res = await fetch("/api/requests/", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({department: "pending", statement: ta.value}),
+    const res = await fetch("/api/cases/");
+    const data = await res.json();
+    histList.replaceChildren();
+    histEmpty.hidden = data.cases.length > 0;
+    data.cases.forEach(c => {
+      const li = el("li"), b = el("button", "row");
+      b.type = "button";
+      const title = el("div");
+      title.append(el("strong", "", c.number + " "), document.createTextNode((DEPTS[c.department] || {name: c.department}).name + " \u2014 "),
+                   el("span", "st-" + c.status, c.status.replace("_", " ")));
+      b.append(title, el("div", "meta", new Date(c.created_at).toLocaleString() + " \u00b7 " + c.statement.slice(0, 70) + (c.statement.length > 70 ? "\u2026" : "")));
+      b.addEventListener("click", () => { renderCase(c); out.scrollIntoView({behavior: "smooth"}); });
+      li.append(b);
+      histList.append(li);
     });
+  } catch (e) { /* history is a convenience; stay quiet */ }
+}
+
+/* ---------- submit / retry ---------- */
+async function send(url, body) {
+  btn.disabled = true;
+  showMessage("Your file is being reviewed by an officer. Please remain seated\u2026");
+  try {
+    const res = await fetch(url, {method: "POST", headers: {"Content-Type": "application/json"}, body: body && JSON.stringify(body)});
     const data = await res.json().catch(() => ({}));
-    if (res.ok) render(data);
-    else showError((data.notice ? data.notice + " " : "") + (data.error || "Something went wrong."));
+    if (res.ok) renderCase(data.case);
+    else if (data.case) {
+      renderCase(data.case, data.notice);
+      out.prepend(el("div", "sheet error", data.error || "Something went wrong."));
+    } else showMessage(data.error || "Something went wrong.", true);
   } catch (e) {
-    showError("The server could not be reached.");
+    showMessage("The server could not be reached.", true);
   } finally {
     btn.disabled = false;
+    loadHistory();
   }
+}
+const retry = number => send("/api/cases/" + encodeURIComponent(number) + "/retry/");
+
+function syncDept() {
+  const d = DEPTS[dept()];
+  promptEl.textContent = d.prompt;
+  ta.placeholder = d.placeholder;
+  btn.textContent = d.button;
+  toneRow.hidden = dept() !== "correspondence";
+}
+document.querySelectorAll('input[name="dept"]').forEach(r => r.addEventListener("change", syncDept));
+ta.addEventListener("input", () => counter.textContent = ta.value.length + " / " + MAX);
+ta.dispatchEvent(new Event("input"));
+syncDept();
+loadHistory();
+
+form.addEventListener("submit", ev => {
+  ev.preventDefault();
+  const body = {department: dept(), statement: ta.value};
+  if (dept() === "correspondence") body.options = {tone: tone.value};
+  send("/api/requests/", body);
 });
 </script>
 </body>
