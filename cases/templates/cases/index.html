@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Department of Unnecessary Affairs</title>
+<style>
+  :root { --ink:#1d2433; --paper:#f6f1e4; --rule:#b9ae93; --accent:#7a1f2b; --ok:#1f5d3a; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#e9e4d3; color:var(--ink); font:16px/1.5 Georgia, "Times New Roman", serif; }
+  main { max-width:820px; margin:0 auto; padding:24px 16px 64px; }
+  header { border-bottom:3px double var(--ink); margin-bottom:20px; }
+  h1 { font-size:1.5rem; margin:0; letter-spacing:.04em; text-transform:uppercase; }
+  .sub { margin:2px 0 12px; font-style:italic; }
+  .sheet { background:var(--paper); border:1px solid var(--rule); padding:16px; margin-bottom:16px; }
+  label { font-weight:bold; display:block; margin-bottom:6px; }
+  textarea { width:100%; min-height:150px; padding:10px; font:inherit; border:1px solid var(--ink); background:#fffdf6; }
+  button { margin-top:10px; padding:10px 18px; font:inherit; background:var(--ink); color:#fff; border:0; cursor:pointer; }
+  button:disabled { opacity:.6; cursor:wait; }
+  button:focus-visible, textarea:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  .counter { font-size:.85rem; float:right; }
+  .error { border-color:var(--accent); color:var(--accent); }
+  .task { border-top:1px solid var(--rule); padding:12px 0; }
+  .task h3 { margin:0 0 4px; font-size:1.05rem; }
+  .badge { display:inline-block; padding:0 8px; font-size:.75rem; text-transform:uppercase; border:1px solid currentColor; margin-right:6px; }
+  .critical { color:#8b0000; } .high { color:#b4540a; } .medium { color:#6b5b00; } .low { color:var(--ok); }
+  dl { margin:6px 0 0; } dt { font-weight:bold; font-size:.85rem; text-transform:uppercase; }
+  dd { margin:0 0 6px; }
+  .notice { background:#fff7d6; border:2px dashed var(--accent); padding:12px; font-style:italic; }
+  .notice small { display:block; font-style:normal; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); }
+  .remark { font-style:italic; color:#555; font-size:.9rem; margin-top:6px; }
+  .stamp { display:inline-block; padding:0 8px; margin-right:6px; font-size:.75rem; font-weight:bold; letter-spacing:.08em;
+           text-transform:uppercase; border:2px solid currentColor; transform:rotate(-2deg); }
+  .v-do_now { color:#8b0000; } .v-schedule { color:#1d4e89; } .v-delegate { color:#5b3a8c; }
+  .v-defer { color:#6b5b00; } .v-deny { color:#555; text-decoration:line-through; }
+  .excused h3 { opacity:.85; }
+  .questions { background:#eef3f8; border:1px solid #9db4cc; padding:10px 14px; margin-top:12px; }
+  .next { border-left:4px solid var(--ok); padding-left:10px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Department of Unnecessary Affairs</h1>
+    <p class="sub">Bureau of Pending Affairs &mdash; Form BA-1: Declaration of Things Not Yet Done</p>
+  </header>
+
+  <form id="form" class="sheet">
+    <label for="statement">Describe everything you have yet to do, in any order or state of panic:</label>
+    <textarea id="statement" maxlength="{{ max_chars }}" required
+      placeholder="e.g. 3 assignments due Friday, need to reply to an email, and my room needs cleaning before my parents visit on Sunday"></textarea>
+    <span class="counter" id="counter" aria-live="off"></span>
+    <button id="submit" type="submit">File declaration</button>
+  </form>
+
+  <div id="out" aria-live="polite"></div>
+</main>
+<script>
+const form = document.getElementById("form"), ta = document.getElementById("statement"),
+      btn = document.getElementById("submit"), out = document.getElementById("out"),
+      counter = document.getElementById("counter"), MAX = {{ max_chars }};
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;   // textContent only: model output is untrusted
+  return e;
+}
+function row(dl, term, value) {
+  if (!value) return;
+  dl.append(el("dt", "", term), el("dd", "", value));
+}
+ta.addEventListener("input", () => counter.textContent = ta.value.length + " / " + MAX);
+ta.dispatchEvent(new Event("input"));
+
+function showError(msg) {
+  out.replaceChildren(el("div", "sheet error", msg));
+}
+
+function render(data) {
+  const c = data.case, r = c.result, frag = document.createDocumentFragment();
+
+  const plan = el("section", "sheet");
+  plan.append(el("h2", "", "Case " + c.number + " — Action Plan"));
+  const next = el("p", "next");
+  next.append(el("strong", "", "Start here (under 5 minutes): "), document.createTextNode(r.plan.smallest_next_action));
+  plan.append(next);
+
+  const LABELS = {do_now: "Do now", schedule: "Schedule", delegate: "Delegate", defer: "Deferred", deny: "Denied"};
+  const active = [], excused = [];
+  r.plan.tasks.forEach((t, i) => (["defer", "deny"].includes(t.verdict) ? excused : active).push([t, i]));
+
+  function addTask(parent, t, i, n) {
+    const box = el("div", "task" + (["defer", "deny"].includes(t.verdict) ? " excused" : ""));
+    const h = el("h3");
+    h.append(el("span", "stamp v-" + t.verdict, LABELS[t.verdict]), el("span", "badge " + t.urgency, t.urgency),
+             document.createTextNode(n + ". " + t.title));
+    box.append(h);
+    const dl = el("dl");
+    row(dl, "Deadline (as you stated)", t.deadline);
+    row(dl, "Why", t.reason);
+    row(dl, "Next step", t.next_step);
+    row(dl, "Minimum effort to be done", t.minimum_effort);
+    row(dl, "Do these first", t.depends_on.join("; "));
+    box.append(dl);
+    const remark = r.notice.task_remarks[i];
+    if (remark) box.append(el("div", "remark", "Status: " + remark));
+    parent.append(box);
+  }
+  active.forEach(([t, i], k) => addTask(plan, t, i, k + 1));
+  if (excused.length) {
+    plan.append(el("h3", "", "Officially excused (you may skip these)"));
+    excused.forEach(([t, i], k) => addTask(plan, t, i, k + 1));
+  }
+  const qs = r.plan.clarifying_questions || [];
+  if (qs.length) {
+    const q = el("div", "questions");
+    q.append(el("strong", "", "The Bureau cannot proceed without knowing:"));
+    const ul = el("ul");
+    qs.forEach(x => ul.append(el("li", "", x)));
+    q.append(ul);
+    plan.append(q);
+  }
+  frag.append(plan);
+
+  if (r.notice.official_notice) {
+    const n = el("aside", "notice");
+    n.append(el("small", "", "Official notice — for entertainment purposes only"), document.createTextNode(r.notice.official_notice));
+    frag.append(n);
+  }
+  out.replaceChildren(frag);
+}
+
+form.addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  btn.disabled = true;
+  out.replaceChildren(el("div", "sheet", "Your declaration is being reviewed by an officer. Please remain seated…"));
+  try {
+    const res = await fetch("/api/requests/", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({department: "pending", statement: ta.value}),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) render(data);
+    else showError((data.notice ? data.notice + " " : "") + (data.error || "Something went wrong."));
+  } catch (e) {
+    showError("The server could not be reached.");
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
