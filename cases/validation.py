@@ -1,31 +1,37 @@
 """Server-side validation of model output. Prompting alone is not trusted."""
 import re
 
+from .validators_common import InvalidModelOutput, text as _text  # noqa: F401  (re-exported for callers)
+
 URGENCIES = ("low", "medium", "high", "critical")
 VERDICTS = ("do_now", "schedule", "defer", "delegate", "deny")
 MAX_QUESTIONS = 3
+EXCUSED = ("defer", "deny")
+# Used only when the model forgets a permit clause for an excused task.
+FALLBACK_PERMIT_CLAUSES = (
+    "you mention it again",
+    "the sloth officer finishes his current blink",
+    "the next full moon, or a tuesday, whichever is less convenient",
+    "someone asks you about it in a confident tone",
+)
 MAX_TASKS = 30
 MAX_TEXT = 500
 MAX_NOTICE = 1200
 
 
-class InvalidModelOutput(Exception):
-    pass
-
-
-def _text(value, field, limit=MAX_TEXT, required=True):
-    if not isinstance(value, str):
-        if required:
-            raise InvalidModelOutput(f"{field} is not a string")
-        return ""
-    value = value.strip()
-    if required and not value:
-        raise InvalidModelOutput(f"{field} is empty")
-    return value[:limit]
-
-
 def _norm(s):
     return re.sub(r"\s+", " ", s).strip().lower()
+
+
+def summary_line(counts):
+    """Smug one-liner computed purely from the verdict counts (no model involved)."""
+    total = sum(counts.values())
+    excused = counts["defer"] + counts["deny"]
+    noun = "task" if total == 1 else "tasks"
+    if excused == 0:
+        return f"Of {total} {noun}, none are officially excused. The Bureau shares your disappointment."
+    verb = "is" if excused == 1 else "are"
+    return f"Of {total} {noun}, {excused} {verb} officially excused. You're welcome."
 
 
 def validate_pending(raw, statement):
@@ -37,7 +43,7 @@ def validate_pending(raw, statement):
         raise InvalidModelOutput("no tasks")
 
     source = _norm(statement)
-    tasks, remarks = [], []
+    tasks, remarks, clauses = [], [], []
     for i, t in enumerate(raw_tasks[:MAX_TASKS]):
         if not isinstance(t, dict):
             raise InvalidModelOutput(f"task {i} is not an object")
@@ -73,6 +79,7 @@ def validate_pending(raw, statement):
             "minimum_effort": _text(t.get("minimum_effort"), "minimum_effort"),
         })
         remarks.append(_text(t.get("excuse"), "excuse", required=False))
+        clauses.append(_text(t.get("permit_clause"), "permit_clause", 160, required=False))
 
     # Dependencies should refer to listed tasks; drop dangling references.
     titles = {_norm(t["title"]) for t in tasks}
@@ -84,20 +91,33 @@ def validate_pending(raw, statement):
         if isinstance(questions, list) else []
 
     # Never hand back a plan that excuses the applicant from everything.
-    if all(t["verdict"] in ("defer", "deny") for t in tasks):
+    if all(t["verdict"] in EXCUSED for t in tasks):
         tasks[0]["verdict"] = "schedule"
+
+    # Permit clauses exist only for excused tasks (verdicts may have been changed by the guards above).
+    permits = []
+    for i, (t, clause) in enumerate(zip(tasks, clauses)):
+        if t["verdict"] in EXCUSED:
+            permits.append(clause or FALLBACK_PERMIT_CLAUSES[i % len(FALLBACK_PERMIT_CLAUSES)])
+        else:
+            permits.append("")
+
+    counts = {v: sum(1 for t in tasks if t["verdict"] == v) for v in VERDICTS}
 
     action = _text(raw.get("smallest_next_action"), "smallest_next_action")
 
     return {
         "plan": {
             "tasks": tasks,
+            "counts": counts,
             "clarifying_questions": questions,
             "smallest_next_action": action,
         },
         "notice": {
             "official_notice": _text(raw.get("official_notice"), "official_notice", MAX_NOTICE, required=False),
             "task_excuses": remarks,
+            "task_permits": permits,
+            "summary_line": summary_line(counts),
         },
     }
 

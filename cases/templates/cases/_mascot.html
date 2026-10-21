@@ -1,0 +1,38 @@
+<div class="mascot" id="mascot">
+  <button type="button" class="mascot-btn" id="slothBtn" aria-label="Officer S. Loth, staff ID. Activate to hear from him.">
+    <span class="idcard">
+      <span class="idclip" aria-hidden="true"></span>
+      <span class="idkicker">Staff identification</span>
+      <svg id="sloth" class="idphoto" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        <!-- jacket, shirt, tie -->
+        <path d="M8 100 Q10 78 36 73 L64 73 Q90 78 92 100 Z" fill="var(--ink)"/>
+        <path d="M40 73 L60 73 L50 95 Z" fill="var(--paper)"/>
+        <path d="M36 73 L49 96 L40 99 L27 80 Z M64 73 L51 96 L60 99 L73 80 Z" fill="#2c3550"/>
+        <path d="M47 76 L53 76 L52 82 L48 82 Z" fill="var(--accent)"/>
+        <path d="M48 82 L52 82 L54 96 L50 100 L46 96 Z" fill="var(--accent)"/>
+        <ellipse cx="50" cy="71" rx="11" ry="6" fill="#bfa97c" stroke="var(--ink)" stroke-width="2"/>
+        <!-- head -->
+        <g class="head" stroke="var(--ink)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+          <ellipse cx="50" cy="40" rx="33" ry="28" fill="#cdb98f"/>
+          <path d="M30 17 Q35 10 41 16 Q46 8 50 15 Q54 8 59 16 Q65 10 70 17" fill="none" stroke-width="2"/>
+          <ellipse cx="50" cy="44" rx="24" ry="19" fill="var(--paper)" stroke-width="1.8"/>
+          <ellipse cx="37" cy="38" rx="9" ry="5.6" transform="rotate(24 37 38)" fill="var(--ink)"/>
+          <ellipse cx="63" cy="38" rx="9" ry="5.6" transform="rotate(-24 63 38)" fill="var(--ink)"/>
+          <circle cx="37.5" cy="38.5" r="2.6" fill="var(--paper)" stroke="none"/>
+          <circle cx="62.5" cy="38.5" r="2.6" fill="var(--paper)" stroke="none"/>
+          <ellipse class="lid" cx="37.5" cy="38.5" rx="4.4" ry="3.4" fill="var(--ink)" stroke="none"/>
+          <ellipse class="lid" cx="62.5" cy="38.5" rx="4.4" ry="3.4" fill="var(--ink)" stroke="none"/>
+          <circle cx="62.5" cy="38.5" r="8.6" fill="none" stroke="var(--accent)" stroke-width="1.6"/>
+          <path d="M71 44 Q80 54 76 70" fill="none" stroke="var(--accent)" stroke-width="1"/>
+          <path d="M55 29 Q62 25 69 28" fill="none" stroke-width="1.8"/>
+          <ellipse cx="50" cy="48" rx="4" ry="2.9" fill="var(--ink)" stroke="none"/>
+          <path d="M43 55 Q50 60 57 55" fill="none" stroke-width="1.8"/>
+        </g>
+      </svg>
+      <span class="idname">Officer S. Loth</span>
+      <span class="idrole">Senior Clerk of Pending Matters</span>
+      <span class="idstatus">Status: <span id="slothStatus">Present, technically</span></span>
+    </span>
+  </button>
+  <div class="bubble" id="bubble" role="status" aria-live="polite" hidden></div>
+</div>

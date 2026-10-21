@@ -17,10 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from cases import views as case_views
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", case_views.index),
     path("api/", include("cases.urls")),
+    path("", include("cases.page_urls")),
 ]

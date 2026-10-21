@@ -1,0 +1,60 @@
+{% extends "cases/base.html" %}
+{% block title %}{{ department.name }} | Department of Unnecessary Affairs{% endblock %}
+{% block page_id %}department{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'home' %}">Front desk</a> &rsaquo; {{ department.name }}</nav>
+<section class="sheet intro">
+  <p class="code">Form {{ department.code }}</p>
+  <h2>{{ department.name }}</h2>
+  <p>{{ department.purpose }}</p>
+  <p class="gives"><strong>You receive:</strong> {{ department.gives }}</p>
+</section>
+
+{% if department.open %}
+<form id="form" class="sheet">
+  <label for="statement" id="prompt">{{ page.prompt }}</label>
+  <textarea id="statement" maxlength="{{ max_chars }}" required placeholder="{{ page.placeholder }}"></textarea>
+  {% if page.upload %}
+  <div class="uploadRow">
+    <label for="file" class="inline">Or upload a file (.txt or .md, up to {{ upload_kb }} KB):</label>
+    <input type="file" id="file" accept=".txt,.md,text/plain,text/markdown">
+    <button type="button" id="clearFile" class="small" hidden>Remove file</button>
+    <p class="meta" id="fileNote" aria-live="polite"></p>
+  </div>
+  {% endif %}
+  {% if page.preferences %}
+  <label for="preferences" class="spaced">{{ page.preferences.label }}</label>
+  <textarea id="preferences" class="short" maxlength="{{ page.preferences.max }}" placeholder="{{ page.preferences.placeholder }}"></textarea>
+  {% endif %}
+  <div class="examples" id="examples" aria-label="Example requests"></div>
+  {% if page.privacy %}<p class="meta privacy">{{ page.privacy }}</p>{% endif %}
+  {% if page.tone %}
+  <div class="toneRow">
+    <label for="tone" class="inline">Tone:</label>
+    <select id="tone">{% for t in tones %}<option value="{{ t }}">{{ t|capfirst }}</option>{% endfor %}</select>
+  </div>
+  {% endif %}
+  <span class="counter" id="counter" aria-live="off"></span>
+  <button id="submit" type="submit">{{ page.button }}</button>
+  <p class="meta">Tip: Ctrl+Enter files the form without any further effort on your part.</p>
+</form>
+
+<div id="out" aria-live="polite"></div>
+
+<section class="sheet" aria-labelledby="recent-h">
+  <h2 id="recent-h">Cases filed at this office</h2>
+  <p class="meta" id="histEmpty">No cases on file. The archive is, regrettably, spotless.</p>
+  <ul class="histList" id="histList" data-department="{{ department.slug }}"></ul>
+</section>
+{{ config|json_script:"page-config" }}
+{% else %}
+<section class="sheet closed-notice">
+  <p><span class="stamp v-defer">Closed</span></p>
+  <h3>Notice on the door</h3>
+  <p>{{ department.closed_note }}</p>
+  <p>This office is not yet accepting applications. Please direct your problems to an open office, or ignore them,
+  which is also a service we provide.</p>
+  <p><a class="button" href="{% url 'home' %}">Return to the front desk</a></p>
+</section>
+{% endif %}
+{% endblock %}

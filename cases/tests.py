@@ -9,7 +9,7 @@ from .ollama import (
     OllamaError, OllamaInvalidResponse, OllamaModelMissing, OllamaTimeout, OllamaUnavailable, ask,
 )
 from .departments import clean_options, build_user_prompt
-from .validation import InvalidModelOutput, validate_correspondence, validate_pending
+from .validation import InvalidModelOutput, summary_line, validate_correspondence, validate_pending
 
 STATEMENT = "I have 3 assignments due Friday, an email to reply to, and my room is a mess."
 
@@ -25,7 +25,8 @@ def good_raw(**over):
              "minimum_effort": "Send one sentence.", "excuse": "Pending."},
             {"title": "Clean room", "urgency": "low", "verdict": "deny", "reason": "No deadline mentioned.",
              "deadline": None, "depends_on": [], "next_step": "Close the door.",
-             "minimum_effort": "None required.", "excuse": "Request denied."},
+             "minimum_effort": "None required.", "excuse": "Request denied.",
+             "permit_clause": "you mention it again in a confident tone"},
         ],
         "clarifying_questions": ["Which email is it?"],
         "smallest_next_action": "Open the first assignment.",
@@ -384,3 +385,80 @@ class CorrespondenceApiTests(TestCase):
         cases = self.client.get("/api/cases/").json()["cases"]
         self.assertEqual(len(cases), 50)
         self.assertEqual(cases[0]["statement"], "s54")
+
+
+# ---------------------------------------------------------------- Permits and summary line
+
+class PermitAndSummaryTests(SimpleTestCase):
+    def test_permit_only_for_excused_tasks(self):
+        notice = validate_pending(good_raw(), STATEMENT)["notice"]
+        self.assertEqual(notice["task_permits"], ["", "", "you mention it again in a confident tone"])
+
+    def test_missing_clause_gets_fallback_for_excused_task(self):
+        raw = good_raw()
+        raw["tasks"][2]["permit_clause"] = ""
+        permits = validate_pending(raw, STATEMENT)["notice"]["task_permits"]
+        self.assertTrue(permits[2])
+        self.assertEqual(permits[:2], ["", ""])
+
+    def test_permit_dropped_when_verdict_is_overridden(self):
+        raw = good_raw()
+        raw["tasks"][1].update(verdict="defer", urgency="high", permit_clause="a bad idea")   # guard -> schedule
+        notice = validate_pending(raw, STATEMENT)["notice"]
+        self.assertEqual(notice["task_permits"][1], "")
+
+    def test_counts_and_summary_are_computed_from_verdicts(self):
+        out = validate_pending(good_raw(), STATEMENT)
+        self.assertEqual(out["plan"]["counts"], {"do_now": 1, "schedule": 1, "defer": 0, "delegate": 0, "deny": 1})
+        self.assertEqual(out["notice"]["summary_line"], "Of 3 tasks, 1 is officially excused. You're welcome.")
+
+    def test_summary_line_wording(self):
+        base = {"do_now": 0, "schedule": 0, "defer": 0, "delegate": 0, "deny": 0}
+        self.assertIn("none are officially excused", summary_line({**base, "do_now": 2}))
+        self.assertTrue(summary_line({**base, "do_now": 1, "defer": 1, "deny": 1}).startswith("Of 3 tasks, 2 are officially"))
+        self.assertTrue(summary_line({**base, "do_now": 1}).startswith("Of 1 task,"))
+
+
+# ---------------------------------------------------------------- Pages
+
+class SitePageTests(TestCase):
+    def test_home_lists_all_four_departments_with_purposes(self):
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 200)
+        for name in ["Bureau of Pending Affairs", "Office of Correspondence Avoidance",
+                     "Commission for Unnecessarily Complicated Documents", "Tribunal for Minor Inconveniences"]:
+            self.assertContains(resp, name)
+        self.assertContains(resp, 'href="/pending/"')
+        self.assertContains(resp, 'href="/correspondence/"')
+        self.assertContains(resp, 'href="/documents/"')
+        self.assertContains(resp, 'href="/tribunal/"')
+
+    def test_each_page_has_its_own_url_and_mascot(self):
+        for url in ["/", "/pending/", "/correspondence/", "/documents/", "/tribunal/", "/files/"]:
+            with self.subTest(url=url):
+                resp = self.client.get(url)
+                self.assertEqual(resp.status_code, 200)
+                self.assertContains(resp, 'id="sloth"')       # mascot on every page
+
+    def test_open_department_pages_have_forms_and_config(self):
+        pending = self.client.get("/pending/")
+        self.assertContains(pending, 'id="form"')
+        self.assertContains(pending, "page-config")
+        self.assertNotContains(pending, 'id="tone"')
+        corr = self.client.get("/correspondence/")
+        self.assertContains(corr, 'id="tone"')
+
+    def test_unknown_department_and_case_are_404(self):
+        self.assertEqual(self.client.get("/nonsense/").status_code, 404)
+        self.assertEqual(self.client.get("/files/NOPE-1/").status_code, 404)
+
+    def test_case_permalink(self):
+        case = Case.objects.create(department="pending", statement="x")
+        resp = self.client.get(f"/files/{case.number}/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, f'data-case="{case.number}"')
+
+    def test_static_assets_are_found(self):
+        from django.contrib.staticfiles import finders
+        self.assertIsNotNone(finders.find("cases/app.js"))
+        self.assertIsNotNone(finders.find("cases/style.css"))

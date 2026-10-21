@@ -43,7 +43,7 @@ def ask(system: str, user: str, schema: dict) -> dict:
         "format": schema,
         "stream": False,
         "think": settings.OLLAMA_THINK,
-        "options": {"temperature": 0.6},
+        "options": {"temperature": 0.6, "num_ctx": settings.OLLAMA_NUM_CTX},
     }
     url = f"{settings.OLLAMA_BASE_URL}/api/chat"
     timeout = (settings.OLLAMA_CONNECT_TIMEOUT, settings.OLLAMA_READ_TIMEOUT)

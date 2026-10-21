@@ -1,0 +1,12 @@
+{% extends "cases/base.html" %}
+{% block title %}Case files | Department of Unnecessary Affairs{% endblock %}
+{% block page_id %}files{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'home' %}">Front desk</a> &rsaquo; Case files</nav>
+<section class="sheet" aria-labelledby="f-h">
+  <h2 id="f-h">Case files</h2>
+  <p>Every case the Department has handled, newest first. Stored only in this installation's own database.</p>
+  <p class="meta" id="histEmpty">No cases on file. The archive is, regrettably, spotless.</p>
+  <ul class="histList" id="histList" data-links="1"></ul>
+</section>
+{% endblock %}

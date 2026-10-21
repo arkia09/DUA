@@ -138,3 +138,13 @@ OLLAMA_THINK = os.environ.get("OLLAMA_THINK", "false").lower() in ("1", "true", 
 
 # Longest statement (characters) a citizen may file
 MAX_STATEMENT_CHARS = int(os.environ.get("MAX_STATEMENT_CHARS", "6000"))
+
+# Phase 3: documents
+# Documents are longer than ordinary statements. The default fits comfortably inside OLLAMA_NUM_CTX together with
+# the instructions and the answer; raise both together if you want to process longer documents.
+MAX_DOCUMENT_CHARS = int(os.environ.get("MAX_DOCUMENT_CHARS", "12000"))
+# Upload size cap in bytes (12000 characters is at most 48000 bytes of UTF-8).
+MAX_UPLOAD_BYTES = int(os.environ.get("MAX_UPLOAD_BYTES", "60000"))
+# Context window requested from Ollama. Ollama's own default can be as small as 4096 tokens, which would silently
+# cut long documents off.
+OLLAMA_NUM_CTX = int(os.environ.get("OLLAMA_NUM_CTX", "8192"))
