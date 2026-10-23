@@ -1,0 +1,21 @@
+{% extends "cases/base.html" %}
+{% block title %}Complaints | Department of Unnecessary Affairs{% endblock %}
+{% block page_id %}complaints{% endblock %}
+{% block body_attrs %} data-unlock="complaints"{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'home' %}">Front desk</a> &rsaquo; Complaints</nav>
+<section class="sheet intro">
+  <p class="code">Form CX</p>
+  <h2>Complaints Department</h2>
+  <p>We take every complaint seriously, in the sense that we take it. Please join the queue.</p>
+  <p class="queue">Your position in the queue: <strong id="queuePos">4,812</strong></p>
+  <p class="meta" id="queueNote">Estimated wait: approximately three fiscal years.</p>
+</section>
+<form id="complaintForm" class="sheet">
+  <label for="complaint">Describe your complaint:</label>
+  <textarea id="complaint" maxlength="2000" required placeholder="e.g. The sloth has not responded to my previous complaint about the sloth."></textarea>
+  <button type="submit">File complaint</button>
+  <p class="meta">Honesty notice: this form sends nothing anywhere. Your complaint stays on this page and disappears when you leave it.</p>
+</form>
+<div id="complaintOut" aria-live="polite"></div>
+{% endblock %}

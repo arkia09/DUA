@@ -81,15 +81,21 @@
     items.forEach(x => ul.append(el("li", "", x)));
     return ul;
   }
-  function sourceQuote(quote) {
+  function sourceQuote(quote, label) {
     const p = el("p", "src");
-    p.append(el("small", "", "Source in your document: "), document.createTextNode("“" + quote + "”"));
+    p.append(el("small", "", (label || "Source in your document") + ": "), document.createTextNode("“" + quote + "”"));
     return p;
   }
   function section(parent, title, node) {
     parent.append(el("h3", "sec", title), node);
   }
 
+  const DONE_LINES = [
+    "Closed. Nobody is more surprised than this Bureau.",
+    "Filed under Accomplished. A rare category.",
+    "Done. The Bureau will pretend it expected this.",
+    "Stamped complete. The Sloth Officer is moved, slowly.",
+  ];
   const LABELS = {do_now: "Do now", schedule: "Schedule", delegate: "Delegate", defer: "Deferred", deny: "Denied"};
   const EXCUSED = ["defer", "deny"];
   const FALLBACK_CLAUSE = "you mention it again";
@@ -113,13 +119,15 @@
   }
 
   /* ---------- case renderers ---------- */
-  function renderPending(c, frag) {
+  function renderPending(c, frag, hooks) {
     const r = c.result, plan = el("section", "sheet");
     plan.append(el("h2", "", "Case " + c.number + " — Action Plan"));
     if (r.notice.summary_line) plan.append(el("p", "smug", r.notice.summary_line));
     const next = el("p", "next");
     next.append(el("strong", "", "Start here (under 5 minutes): "), document.createTextNode(r.plan.smallest_next_action));
     plan.append(next);
+    const progressEl = el("p", "progress"), done = new Set(c.done_tasks || []);
+    plan.append(progressEl);
 
     const active = [], excused = [];
     r.plan.tasks.forEach((t, i) => (EXCUSED.includes(t.verdict) ? excused : active).push([t, i]));
@@ -130,9 +138,36 @@
       const isExcused = EXCUSED.includes(t.verdict);
       const box = el("div", "task" + (isExcused ? " excused" : ""));
       const h = el("h3");
+      const closed = el("span", "stamp v-done", "Closed");
+      closed.hidden = !done.has(i);
       h.append(el("span", "stamp v-" + t.verdict, LABELS[t.verdict] || t.verdict), el("span", "badge " + t.urgency, t.urgency),
-               document.createTextNode(n + ". " + t.title));
+               closed, el("span", "ttl", n + ". " + t.title));
       box.append(h);
+      if (t.verdict !== "deny") {
+        const tick = el("label", "tick"), cb = el("input"), note = el("p", "done-note", DONE_LINES[i % DONE_LINES.length]);
+        cb.type = "checkbox";
+        cb.checked = done.has(i);
+        note.hidden = !cb.checked;
+        box.classList.toggle("done", cb.checked);
+        tick.append(cb, document.createTextNode(" Mark as done"));
+        cb.addEventListener("change", async () => {
+          const want = cb.checked;
+          cb.disabled = true;
+          try {
+            const res = await post("/api/cases/" + encodeURIComponent(c.number) + "/tasks/" + i + "/", {json: {done: want}});
+            if (!res.ok) throw new Error();
+            if (want) done.add(i); else done.delete(i);
+            box.classList.toggle("done", want);
+            note.hidden = closed.hidden = !want;
+            updateProgress();
+            if (want) mascot.say(DONE_LINES[i % DONE_LINES.length]);
+          } catch (e) {
+            cb.checked = !want;
+            mascot.say("The stamp pad is dry. Your tick was not recorded.");
+          } finally { cb.disabled = false; }
+        });
+        box.append(tick, note);
+      }
       if (excuses[i]) {
         const q = el("blockquote", "excuse");
         q.append(el("small", "", "Official excuse (fictional; do not submit to your teacher)"),
@@ -141,10 +176,10 @@
       }
       box.append(el("div", "serious", "On a serious note…"));
       const dl = el("dl");
+      row(dl, "Next step (under 5 minutes)", t.next_step);
       row(dl, "Deadline (as you stated)", t.deadline);
-      row(dl, "Why", t.reason);
-      row(dl, "Next step", t.next_step);
       row(dl, "Minimum effort to be done", t.minimum_effort);
+      row(dl, "Why it ranks here", t.reason);
       row(dl, "Do these first", (t.depends_on || []).join("; "));
       box.append(dl);
       if (isExcused) box.append(permit(c, t, i, permits[i]));
@@ -157,6 +192,23 @@
     }
     const q = questionsBox(r.plan.clarifying_questions);
     if (q) plan.append(q);
+
+    const carry = el("button", "small", "Carry unfinished tasks into a new plan");
+    carry.type = "button";
+    carry.title = "Files a new case with everything not yet done, and plans it again";
+    carry.addEventListener("click", () => hooks.carry && hooks.carry(c.number));
+    const tickable = r.plan.tasks.filter(t => t.verdict !== "deny").length;
+    function updateProgress() {
+      const left = r.plan.tasks.filter((t, i) => t.verdict !== "deny" && !done.has(i)).length;
+      progressEl.textContent = "Done: " + (tickable - left) + " of " + tickable + " tasks (denied tasks need no ticking).";
+      carry.disabled = left === 0;
+    }
+    updateProgress();
+    if (tickable) {
+      const act = el("div", "actions");
+      act.append(carry, el("span", "meta", "Tomorrow? This files the open tasks as a fresh case and re-plans them. It takes as long as any new plan."));
+      plan.append(act);
+    }
     frag.append(plan);
     const n = officialNotice("Official notice", r.notice.official_notice);
     if (n) frag.append(n);
@@ -169,7 +221,8 @@
   function renderCorrespondence(c, frag) {
     const r = c.result, d = r.draft, sheet = el("section", "sheet");
     sheet.append(el("h2", "", "Case " + c.number + " — Your Message"));
-    if (c.options && c.options.tone) sheet.append(el("p", "meta", "Tone: " + c.options.tone));
+    if (c.options && c.options.tone) sheet.append(el("p", "meta", "Tone: " + c.options.tone +
+      (c.options.incoming ? " · Reply to the message you pasted" : "")));
     const full = (subject, body) => (subject ? "Subject: " + subject + "\n\n" : "") + body;
     if (d.subject) sheet.append(el("div", "", "Subject: " + d.subject));
     sheet.append(el("pre", "draft", d.body), copyButton(() => full(d.subject, d.body)));
@@ -181,6 +234,18 @@
       det.append(el("summary", "", "Alternative: " + a.label), el("pre", "draft", a.body), copyButton(() => full(d.subject, a.body)));
       sheet.append(det);
     });
+    if (d.incoming_questions && d.incoming_questions.length) {
+      const box = el("div");
+      d.incoming_questions.forEach(x => {
+        const b = el("div", "claim reply-q");
+        b.append(el("span", "stamp " + (x.answered ? "v-done" : "v-need"), x.answered ? "Answered in draft" : "Needs your input"),
+                 el("div", "", x.question), sourceQuote(x.quote, "Their words"));
+        box.append(b);
+      });
+      section(sheet, "Questions in the message you received", box);
+      sheet.append(el("p", "meta", "Answered or not is the AI's own judgement. Check that your draft covers each one." +
+        (d.dropped_incoming_questions ? " " + d.dropped_incoming_questions + " item(s) were removed because they could not be matched to the message." : "")));
+    }
     const q = questionsBox(d.clarifying_questions);
     if (q) sheet.append(q);
     frag.append(sheet);
@@ -196,6 +261,7 @@
     sheet.append(el("h2", "", "Case " + c.number + " — Document Review"));
     const o = c.options || {};
     sheet.append(el("p", "meta", (o.filename ? "File: " + o.filename : "Pasted text") +
+      (o.pages ? " · " + o.pages + (o.pages === 1 ? " page" : " pages") : "") +
       (o.words ? " · " + o.words + " words" : "") + " · The full text was not saved."));
 
     if (r.looks_like_instructions) {
@@ -260,6 +326,59 @@
     const nd = (r.deadlines || []).length;
     mascot.say(nd ? "I have found " + nd + (nd === 1 ? " deadline" : " deadlines") + ". I have not hurried toward them."
                   : "No stated deadlines. I find this restful, but please read the unclear parts.");
+  }
+
+  /* ---------- Morning Docket Office ---------- */
+  function renderBriefing(c, frag) {
+    const r = c.result.docket, n = c.result.notice || {}, sheet = el("section", "sheet"), o = c.options || {};
+    sheet.append(el("h2", "", "Case " + c.number + " — Today's Docket"));
+    sheet.append(el("p", "meta", (o.filename ? "File: " + o.filename : "Pasted notes") +
+      (o.pages ? " · " + o.pages + (o.pages === 1 ? " page" : " pages") : "") +
+      (o.words ? " · " + o.words + " words" : "") + " · The full text was not saved."));
+    if (r.one_liner) sheet.append(el("p", "smug", r.one_liner));
+
+    const today = el("div");
+    r.top.forEach((t, i) => {
+      const b = el("div", "docket-item"), h = el("h4", "", (i + 1) + ". " + t.title);
+      if (t.deadline) h.append(document.createTextNode(" "), el("span", "badge high", "deadline: " + t.deadline));
+      const dl = el("dl");
+      row(dl, "Why today", t.why);
+      row(dl, "Next step (under 5 minutes)", t.next_step);
+      b.append(h, dl, sourceQuote(t.quote, "Your words"));
+      today.append(b);
+    });
+    section(sheet, "Today", today);
+
+    if (r.heads_up && r.heads_up.length) {
+      const ul = el("ul", "docket-list");
+      r.heads_up.forEach(h => {
+        const li = el("li");
+        li.append(el("strong", "", h.title), document.createTextNode(h.when ? " (" + h.when + ")" : ""), sourceQuote(h.quote, "Your words"));
+        ul.append(li);
+      });
+      section(sheet, "Coming up", ul);
+    }
+    if (r.can_wait && r.can_wait.length) {
+      const ul = el("ul", "docket-list");
+      r.can_wait.forEach(w => {
+        const li = el("li");
+        li.append(el("strong", "", w.title), document.createTextNode(": " + w.why), sourceQuote(w.quote, "Your words"));
+        ul.append(li);
+      });
+      section(sheet, "Can wait (you are officially permitted to ignore these today)", ul);
+    }
+    const q = questionsBox(r.clarifying_questions, "The Office would like to know:");
+    if (q) sheet.append(q);
+    if (r.dropped_items) {
+      sheet.append(el("p", "meta", r.dropped_items + (r.dropped_items === 1 ? " item was" : " items were") +
+        " removed because the AI could not point to matching words in your notes."));
+    }
+    sheet.append(el("p", "meta", "AI-generated. Check the quoted words before relying on any item."));
+    frag.append(sheet);
+    const note = officialNotice("Notice of Daily Obligations", n.notice);
+    if (note) frag.append(note);
+    const k = r.top.length;
+    mascot.say("Today's docket: " + k + (k === 1 ? " item" : " items") + ". The rest may wait. I will not be hurrying them.");
   }
 
   /* ---------- Tribunal for Minor Inconveniences ---------- */
@@ -349,10 +468,11 @@
         }
         frag.append(box);
         mascot.say("The review has been postponed. By me. Retry when you feel ready.");
-      } else if (c.result && c.result.plan) renderPending(c, frag);
+      } else if (c.result && c.result.plan) renderPending(c, frag, hooks);
       else if (c.result && c.result.draft) renderCorrespondence(c, frag);
       else if (c.result && c.result.review) renderDocuments(c, frag);
       else if (c.result && c.result.ruling) renderTribunal(c, frag);
+      else if (c.result && c.result.docket) renderBriefing(c, frag);
       else frag.append(el("div", "sheet", "Case " + c.number + " is on file, but its record is in an older format and cannot be displayed."));
     } catch (e) {
       frag.append(el("div", "sheet error", "Case " + c.number + " is on file, but its record could not be displayed."));
@@ -363,6 +483,20 @@
         const a = el("a", "", "Permanent link to case " + c.number);
         a.href = "/files/" + encodeURIComponent(c.number) + "/";
         p.append(a, document.createTextNode(" · "));
+      }
+      const canExport = c.status === "resolved" && c.result && !(c.result.ruling && c.result.ruling.crisis);
+      if (canExport) {
+        const base = "/api/cases/" + encodeURIComponent(c.number) + "/export/";
+        const md = el("a", "", "Download Markdown");
+        md.href = base + "md/";
+        md.setAttribute("download", "");
+        p.append(md, document.createTextNode(" · "));
+        if (c.department === "pending") {
+          const ics = el("a", "", "Download to-do list (.ics)");
+          ics.href = base + "ics/";
+          ics.setAttribute("download", "");
+          p.append(ics, document.createTextNode(" · "));
+        }
       }
       const sh = el("button", "small", "Shred this case");
       sh.type = "button";
@@ -377,7 +511,7 @@
   }
 
   /* ---------- history ---------- */
-  const DEPT_NAMES = {pending: "Bureau of Pending Affairs", correspondence: "Office of Correspondence Avoidance",
+  const DEPT_NAMES = {briefing: "Morning Docket Office", pending: "Bureau of Pending Affairs", correspondence: "Office of Correspondence Avoidance",
                       documents: "Commission for Unnecessarily Complicated Documents", tribunal: "Tribunal for Minor Inconveniences"};
 
   async function loadHistory(onSelect) {
@@ -419,11 +553,13 @@
     const config = JSON.parse($("#page-config").textContent);
     const form = $("#form"), ta = $("#statement"), btn = $("#submit"), out = $("#out"), counter = $("#counter"),
           tone = $("#tone"), examples = $("#examples"), prefs = $("#preferences"),
-          file = $("#file"), clearFile = $("#clearFile"), fileNote = $("#fileNote");
+          file = $("#file"), clearFile = $("#clearFile"), fileNote = $("#fileNote"),
+          incoming = $("#incoming"), promptLabel = $("#prompt");
     let ticker = null;
 
     function showMessage(msg, isError) { out.replaceChildren(el("div", isError ? "sheet error" : "sheet", msg)); }
-    const hooks = {retry: number => send("/api/cases/" + encodeURIComponent(number) + "/retry/"), shred};
+    const hooks = {retry: number => send("/api/cases/" + encodeURIComponent(number) + "/retry/"), shred,
+                   carry: number => send("/api/cases/" + encodeURIComponent(number) + "/carry-over/")};
     const show = (c, notice) => renderCase(out, c, notice, hooks);
 
     function startLoading() {
@@ -483,9 +619,11 @@
       if (!file) return;
       if (!f) { fileNote.textContent = ""; return; }
       const ext = (f.name.split(".").pop() || "").toLowerCase();
-      if (!["txt", "md"].includes(ext)) {
-        fileNote.textContent = "Only .txt and .md files are accepted. Please remove this file or choose another.";
-      } else if (f.size > config.maxUploadBytes) {
+      if (!["txt", "md", "pdf"].includes(ext)) {
+        fileNote.textContent = "Only .txt, .md and .pdf files are accepted. Please remove this file or choose another.";
+      } else if (ext === "pdf" && f.size > config.maxPdfBytes) {
+        fileNote.textContent = "That file is too large (maximum " + Math.floor(config.maxPdfBytes / 1000000) + " MB for a PDF).";
+      } else if (ext !== "pdf" && f.size > config.maxUploadBytes) {
         fileNote.textContent = "That file is too large (maximum " + Math.floor(config.maxUploadBytes / 1000) + " KB).";
       } else {
         fileNote.textContent = "Using " + f.name + " (" + f.size + " bytes). Pasted text is ignored while a file is chosen.";
@@ -497,6 +635,15 @@
     }
 
     ta.addEventListener("input", () => { counter.textContent = ta.value.length + " / " + config.maxChars; });
+    if (incoming) {   // with a pasted message, notes on how to reply become optional
+      const sync = () => {
+        const has = incoming.value.trim().length > 0;
+        ta.required = !has;
+        promptLabel.textContent = has ? promptLabel.dataset.withIncoming : promptLabel.dataset.plain;
+      };
+      incoming.addEventListener("input", sync);
+      sync();
+    }
     ta.dispatchEvent(new Event("input"));
     (config.examples || []).forEach(ex => {
       const text = typeof ex === "string" ? ex : ex.text;
@@ -505,6 +652,7 @@
       b.title = text;
       b.addEventListener("click", () => {
         if (file) { file.value = ""; syncFile(); }
+        if (incoming) { incoming.value = (typeof ex === "object" && ex.incoming) || ""; incoming.dispatchEvent(new Event("input")); }
         ta.value = text;
         if (prefs) prefs.value = (typeof ex === "object" && ex.preferences) || "";
         ta.dispatchEvent(new Event("input"));
@@ -512,7 +660,7 @@
       });
       examples.append(b);
     });
-    [ta, prefs].forEach(box => box && box.addEventListener("keydown", ev => {
+    [ta, prefs, incoming].forEach(box => box && box.addEventListener("keydown", ev => {
       if (ev.key === "Enter" && (ev.ctrlKey || ev.metaKey)) { ev.preventDefault(); form.requestSubmit(); }
     }));
     form.addEventListener("submit", ev => {
@@ -523,16 +671,19 @@
         if (bad) { file.focus(); return; }
         const fd = new FormData();
         fd.append("file", f);
+        fd.append("department", config.department);
         send("/api/requests/upload/", {form: fd});
         return;
       }
       const body = {department: config.department, statement: ta.value};
       if (config.tone && tone) body.options = {tone: tone.value};
+      if (incoming && incoming.value.trim()) body.options.incoming = incoming.value;
       if (prefs) body.options = {preferences: prefs.value};
       send("/api/requests/", {json: body});
     });
     loadHistory(show);
     const GREETING = {
+      briefing: "Morning Docket. Hand over the pile. I will tell you which three things deserve to ruin your morning.",
       pending: "Bureau of Pending Affairs. Tell me everything. I will decide what you may ignore.",
       correspondence: "Correspondence Avoidance. Tell me what you need to say. I will say it for you.",
       documents: "Commission for Unnecessarily Complicated Documents. Hand it over. I will read it. Eventually.",
@@ -556,6 +707,15 @@
       retry: n => {
         out.replaceChildren(el("div", "sheet", "Sending back for review…"));
         load("/api/cases/" + encodeURIComponent(n) + "/retry/", {method: "POST", headers: {"X-CSRFToken": csrfToken()}});
+      },
+      carry: async n => {
+        out.replaceChildren(el("div", "sheet", "Filing the unfinished tasks as a new case. This can take a little while."));
+        try {
+          const res = await post("/api/cases/" + encodeURIComponent(n) + "/carry-over/");
+          const data = await res.json().catch(() => ({}));
+          if (data.case && data.case.number) { window.location.href = "/files/" + encodeURIComponent(data.case.number) + "/"; return; }
+          out.replaceChildren(el("div", "sheet error", data.error || "Something went wrong."));
+        } catch (e) { out.replaceChildren(el("div", "sheet error", "The server could not be reached.")); }
       },
       shred: async n => {
         try {

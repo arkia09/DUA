@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,13 +22,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6cmv2w7)43f_-hxlnwkfk!hsvvu_h*@d3=th3gp5*3^m#o!hr3'
+# Configuration comes from environment variables (see .env.example). The defaults are for local development.
+# Debug defaults to ON so that `runserver` serves static files and shows helpful errors on your own machine.
+# Before sharing the app with anyone else, set DJANGO_DEBUG=false, DJANGO_SECRET_KEY and DJANGO_ALLOWED_HOSTS.
+DEBUG = os.environ.get("DJANGO_DEBUG", "true").lower() in ("1", "true", "yes")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "")
+if not SECRET_KEY:
+    if not DEBUG:
+        raise ImproperlyConfigured("DJANGO_SECRET_KEY must be set when DJANGO_DEBUG is false.")
+    SECRET_KEY = "django-insecure-local-development-key-do-not-use-anywhere-else"
 
-ALLOWED_HOSTS = []
+# Comma-separated, e.g. "localhost,127.0.0.1". Empty is fine while DEBUG is on (Django allows localhost).
+ALLOWED_HOSTS = [h.strip() for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if h.strip()]
 
 
 # Application definition
@@ -145,6 +153,9 @@ MAX_STATEMENT_CHARS = int(os.environ.get("MAX_STATEMENT_CHARS", "6000"))
 MAX_DOCUMENT_CHARS = int(os.environ.get("MAX_DOCUMENT_CHARS", "12000"))
 # Upload size cap in bytes (12000 characters is at most 48000 bytes of UTF-8).
 MAX_UPLOAD_BYTES = int(os.environ.get("MAX_UPLOAD_BYTES", "60000"))
+# PDF uploads: the file is parsed in memory with pypdf and only its text is kept. Text-based PDFs only (no OCR).
+MAX_PDF_BYTES = int(os.environ.get("MAX_PDF_BYTES", "2000000"))
+MAX_PDF_PAGES = int(os.environ.get("MAX_PDF_PAGES", "40"))
 # Context window requested from Ollama. Ollama's own default can be as small as 4096 tokens, which would silently
 # cut long documents off.
 OLLAMA_NUM_CTX = int(os.environ.get("OLLAMA_NUM_CTX", "8192"))

@@ -339,9 +339,11 @@ class DocumentUploadTests(TestCase):
         self.assertEqual(Case.objects.count(), 0)
 
     @mock.patch("cases.views.ask")
-    def test_pdf_message_is_helpful(self, ask_mock):
+    def test_broken_pdf_message_is_helpful(self, ask_mock):
         resp = self.upload("contract.pdf", b"%PDF-1.7 ...")
-        self.assertIn(".txt and .md", resp.json()["error"])
+        self.assertEqual(resp.status_code, 400)
+        self.assertIn("could not be read", resp.json()["error"])
+        ask_mock.assert_not_called()
 
     @mock.patch("cases.views.ask")
     def test_oversized_files_are_refused(self, ask_mock):
@@ -352,7 +354,7 @@ class DocumentUploadTests(TestCase):
 
     @mock.patch("cases.views.ask")
     def test_oversized_declared_length_is_refused_before_parsing(self, ask_mock):
-        resp = self.client.post(self.url, {"file": SimpleUploadedFile("a.txt", b"x")}, CONTENT_LENGTH="999999")
+        resp = self.client.post(self.url, {"file": SimpleUploadedFile("a.txt", b"x")}, CONTENT_LENGTH="3000000")
         self.assertEqual(resp.status_code, 413)
         ask_mock.assert_not_called()
 
@@ -731,11 +733,10 @@ class Phase3PageTests(TestCase):
         resp = self.client.get("/documents/")
         self.assertContains(resp, 'id="statement"')
         self.assertContains(resp, 'id="file"')
-        self.assertContains(resp, 'accept=".txt,.md,text/plain,text/markdown"')
+        self.assertContains(resp, 'accept=".txt,.md,.pdf,text/plain,text/markdown,application/pdf"')
         self.assertContains(resp, "not saved")
         self.assertNotContains(resp, 'id="tone"')
         self.assertNotContains(resp, 'id="preferences"')
-        self.assertNotContains(resp, "pdf")
 
     def test_tribunal_page_has_dilemma_and_preferences(self):
         resp = self.client.get("/tribunal/")

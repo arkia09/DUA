@@ -5,6 +5,7 @@ PREFIXES = {
     "correspondence": "OC",
     "documents": "CD",
     "tribunal": "TM",
+    "briefing": "MD",
 }
 
 
@@ -14,6 +15,7 @@ class Case(models.Model):
         ("correspondence", "Office of Correspondence Avoidance"),
         ("documents", "Commission for Unnecessarily Complicated Documents"),
         ("tribunal", "Tribunal for Minor Inconveniences"),
+        ("briefing", "Morning Docket Office"),
     ]
     STATUSES = [
         ("filed", "Filed"),
@@ -36,6 +38,7 @@ class Case(models.Model):
     status = models.CharField(max_length=20, choices=STATUSES, default="filed")
     result = models.JSONField(null=True, blank=True)
     options = models.JSONField(default=dict, blank=True)  # e.g. {"tone": "firm"}
+    done_tasks = models.JSONField(default=list, blank=True)  # indexes of Pending tasks the user ticked off
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):

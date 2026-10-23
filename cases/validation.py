@@ -1,7 +1,7 @@
 """Server-side validation of model output. Prompting alone is not trusted."""
 import re
 
-from .validators_common import InvalidModelOutput, text as _text  # noqa: F401  (re-exported for callers)
+from .validators_common import InvalidModelOutput, quote_in_source, words, text as _text  # noqa: F401  (re-exported)
 
 URGENCIES = ("low", "medium", "high", "critical")
 VERDICTS = ("do_now", "schedule", "defer", "delegate", "deny")
@@ -136,7 +136,30 @@ def _placeholders(*texts):
     return seen
 
 
-def validate_correspondence(raw, statement):
+MAX_INCOMING_QUESTIONS = 8
+
+
+def _incoming_questions(raw_list, incoming):
+    """Questions the received message really asks. Each must carry a quote found in that message; the rest are dropped.
+    Returns (items, dropped_count). Without an incoming message there is nothing to check, so nothing is returned."""
+    if not incoming or not isinstance(raw_list, list):
+        return [], 0
+    src, items, dropped = words(incoming), [], 0
+    for q in raw_list:
+        if not isinstance(q, dict):
+            dropped += 1
+            continue
+        question = _text(q.get("question"), "question", MAX_TEXT, required=False)
+        quote = q.get("quote")
+        if not question or not quote_in_source(quote, src, min_words=2):
+            dropped += 1
+            continue
+        if len(items) < MAX_INCOMING_QUESTIONS:
+            items.append({"question": question, "quote": quote.strip()[:400], "answered": q.get("answered") is True})
+    return items, dropped
+
+
+def validate_correspondence(raw, statement, options=None):
     """Return {"draft": {...useful...}, "notice": {...humour...}} or raise InvalidModelOutput."""
     if not isinstance(raw, dict):
         raise InvalidModelOutput("not an object")
@@ -163,6 +186,8 @@ def validate_correspondence(raw, statement):
     questions = [q.strip()[:MAX_TEXT] for q in questions if isinstance(q, str) and q.strip()][:MAX_QUESTIONS] \
         if isinstance(questions, list) else []
 
+    incoming_questions, dropped = _incoming_questions(raw.get("incoming_questions"), (options or {}).get("incoming", ""))
+
     return {
         "draft": {
             "subject": subject,
@@ -171,6 +196,9 @@ def validate_correspondence(raw, statement):
             # computed here, not trusted from the model: details the applicant must still fill in
             "placeholders": _placeholders(subject, body, *[a["body"] for a in alternatives]),
             "clarifying_questions": questions,
+            # reply mode: what the received message asks, each tied to its own words (checked here, not trusted)
+            "incoming_questions": incoming_questions,
+            "dropped_incoming_questions": dropped,
         },
         "notice": {
             "official_memo": _text(raw.get("official_memo"), "official_memo", MAX_NOTICE, required=False),

@@ -1,0 +1,22 @@
+{% extends "cases/base.html" %}
+{% block title %}Break room | Department of Unnecessary Affairs{% endblock %}
+{% block page_id %}break-room{% endblock %}
+{% block body_attrs %} data-unlock="break"{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'home' %}">Front desk</a> &rsaquo; Break room</nav>
+<section class="sheet intro">
+  <p class="code">Staff only. You are not staff. Please carry on.</p>
+  <h2>The Break Room</h2>
+  <div class="doorsign" role="img" aria-label="Door sign: Do not disturb. Officer S. Loth is resting his eyes.">
+    <span>Do not disturb</span><small>Officer S. Loth is resting his eyes</small>
+  </div>
+  <p>A sofa, a kettle and a very still colleague. The clock on the wall has not moved since the last audit. You may
+  look around. You may not hurry anyone.</p>
+  <p>
+    <button type="button" id="coffee">Offer coffee</button>
+    <button type="button" id="wake">Wake him</button>
+    <button type="button" id="fridge">Inspect the fridge</button>
+  </p>
+  <p id="breakLog" class="notice-line" role="status" aria-live="polite">The room is quiet. Somewhere, slowly, a kettle is thinking about it.</p>
+</section>
+{% endblock %}

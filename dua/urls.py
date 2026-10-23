@@ -22,3 +22,5 @@ urlpatterns = [
     path("api/", include("cases.urls")),
     path("", include("cases.page_urls")),
 ]
+
+handler404 = "cases.views.not_found"

@@ -1,0 +1,26 @@
+{% extends "cases/base.html" %}
+{% block title %}Page deferred | Department of Unnecessary Affairs{% endblock %}
+{% block page_id %}lost{% endblock %}
+{% block body_attrs %} data-unlock="lost"{% endblock %}
+{% block content %}
+<section class="sheet intro">
+  <p class="code">Form 404</p>
+  <h2>This page has been deferred</h2>
+  <p>You asked for a page that this Department has no record of. We have looked everywhere that is convenient to look.
+  A permit has been issued so that nobody has to feel bad about it.</p>
+</section>
+<div class="permit" role="group" aria-label="Permit to Not Exist">
+  <div class="permit-kicker">Department of Unnecessary Affairs</div>
+  <div class="permit-title">Permit to Not Exist</div>
+  <div class="permit-no">No. PTI-404-{{ request.path|length }}</div>
+  <dl>
+    <dt>Granted to:</dt><dd>The Applicant</dd>
+    <dt>In respect of:</dt><dd>{{ request.path }}</dd>
+    <dt>Valid until:</dt><dd>someone builds it, or you stop looking</dd>
+  </dl>
+  <div class="permit-sign">Issued by the Sloth Officer, eventually.</div>
+  <div class="permit-seal">Deferred</div>
+</div>
+<p><a class="button" href="{% url 'home' %}">Return to the front desk</a></p>
+<p class="meta">Looking for someone to complain to? The <a href="{% url 'complaints' %}">Complaints Department</a> is open. It will not help, but it is open.</p>
+{% endblock %}

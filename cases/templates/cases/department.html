@@ -12,12 +12,18 @@
 
 {% if department.open %}
 <form id="form" class="sheet">
+  {% if page.incoming %}
+  <label for="incoming">{{ page.incoming.label }}</label>
+  <textarea id="incoming" class="short" maxlength="{{ page.incoming.max }}" placeholder="{{ page.incoming.placeholder }}"></textarea>
+  <label for="statement" id="prompt" class="spaced" data-with-incoming="{{ page.incoming.notes_label }}" data-plain="{{ page.prompt }}">{{ page.prompt }}</label>
+  {% else %}
   <label for="statement" id="prompt">{{ page.prompt }}</label>
-  <textarea id="statement" maxlength="{{ max_chars }}" required placeholder="{{ page.placeholder }}"></textarea>
+  {% endif %}
+  <textarea id="statement" maxlength="{{ max_chars }}" {% if not page.incoming %}required{% endif %} placeholder="{{ page.placeholder }}"></textarea>
   {% if page.upload %}
   <div class="uploadRow">
-    <label for="file" class="inline">Or upload a file (.txt or .md, up to {{ upload_kb }} KB):</label>
-    <input type="file" id="file" accept=".txt,.md,text/plain,text/markdown">
+    <label for="file" class="inline">Or upload a file (.txt or .md up to {{ upload_kb }} KB, or a text-based .pdf up to {{ pdf_mb }} MB):</label>
+    <input type="file" id="file" accept=".txt,.md,.pdf,text/plain,text/markdown,application/pdf">
     <button type="button" id="clearFile" class="small" hidden>Remove file</button>
     <p class="meta" id="fileNote" aria-live="polite"></p>
   </div>
