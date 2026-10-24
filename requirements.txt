@@ -1,3 +1,5 @@
 Django==6.1.2
 requests>=2.31
 pypdf>=6.0
+whitenoise>=6.9
+gunicorn>=23.0

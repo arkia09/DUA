@@ -4,7 +4,6 @@ Ollama is always mocked. These prove what the code does with whatever a model re
 """
 import io
 import json
-import re
 from unittest import mock
 
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -17,8 +16,8 @@ from .departments import build_user_prompt, clean_options
 from .models import Case
 from .offices import briefing
 from .pdf_text import PdfProblem, extract_text
-from .test_phase3 import DILEMMA, DOC, PREFS, good_review, good_ruling
-from .tests import STATEMENT, good_raw
+from .test_offices import DILEMMA, DOC, PREFS, good_review, good_ruling
+from .test_core import STATEMENT, good_raw, own
 from .validation import validate_correspondence, validate_pending
 from .validators_common import InvalidModelOutput
 
@@ -159,9 +158,9 @@ class ReplyApiTests(TestCase):
 
 # ---------------------------------------------------------------- progress, carry-over, export
 
-def make_plan_case(**over):
+def make_plan_case(owner, **over):
     result = validate_pending(good_raw(), STATEMENT)
-    return Case.objects.create(department="pending", statement=STATEMENT, status="resolved", result=result, **over)
+    return Case.objects.create(owner=owner, department="pending", statement=STATEMENT, status="resolved", result=result, **over)
 
 
 class TaskProgressTests(TestCase):
@@ -169,7 +168,7 @@ class TaskProgressTests(TestCase):
         return self.client.post(f"/api/cases/{number}/tasks/{index}/", json.dumps(body), content_type="application/json")
 
     def test_tick_and_untick_are_saved(self):
-        case = make_plan_case()
+        case = make_plan_case(own(self.client), )
         resp = self.tick(case.number, 1, {"done": True})
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()["case"]["done_tasks"], [1])
@@ -182,7 +181,7 @@ class TaskProgressTests(TestCase):
         self.assertEqual(case.done_tasks, [0])
 
     def test_bad_requests(self):
-        case = make_plan_case()
+        case = make_plan_case(own(self.client), )
         self.assertEqual(self.tick(case.number, 9, {"done": True}).status_code, 404)
         self.assertEqual(self.tick(case.number, 0, {"done": "yes"}).status_code, 400)
         self.assertEqual(self.tick(case.number, 0, [1]).status_code, 400)
@@ -192,13 +191,13 @@ class TaskProgressTests(TestCase):
         self.assertEqual(self.client.get(f"/api/cases/{case.number}/tasks/0/").status_code, 405)
 
     def test_only_finished_pending_plans_have_tasks(self):
-        other = Case.objects.create(department="correspondence", statement="x", status="resolved", result={"draft": {}})
+        other = Case.objects.create(owner=own(self.client), department="correspondence", statement="x", status="resolved", result={"draft": {}})
         self.assertEqual(self.tick(other.number, 0, {"done": True}).status_code, 409)
-        failed = Case.objects.create(department="pending", statement="x", status="failed")
+        failed = Case.objects.create(owner=own(self.client), department="pending", statement="x", status="failed")
         self.assertEqual(self.tick(failed.number, 0, {"done": True}).status_code, 409)
 
     def test_new_cases_start_with_nothing_done(self):
-        self.assertEqual(make_plan_case().done_tasks, [])
+        self.assertEqual(make_plan_case(own(self.client), ).done_tasks, [])
 
 
 class CarryOverTests(TestCase):
@@ -208,7 +207,7 @@ class CarryOverTests(TestCase):
     @mock.patch("cases.views.ask")
     def test_open_tasks_are_carried_into_a_new_case_without_done_or_denied_ones(self, ask_mock):
         ask_mock.return_value = good_raw()
-        case = make_plan_case(done_tasks=[1])           # 0 Finish assignments (Friday), 1 Reply (done), 2 Clean (deny)
+        case = make_plan_case(own(self.client), done_tasks=[1])           # 0 Finish assignments (Friday), 1 Reply (done), 2 Clean (deny)
         resp = self.carry(case.number)
         self.assertEqual(resp.status_code, 201)
         new = resp.json()["case"]
@@ -220,20 +219,20 @@ class CarryOverTests(TestCase):
 
     @mock.patch("cases.views.ask")
     def test_nothing_to_carry_over_is_refused(self, ask_mock):
-        case = make_plan_case(done_tasks=[0, 1])
+        case = make_plan_case(own(self.client), done_tasks=[0, 1])
         resp = self.carry(case.number)
         self.assertEqual(resp.status_code, 400)
         ask_mock.assert_not_called()
 
     def test_statement_stops_before_the_length_limit(self):
         from .views import carry_over_statement
-        case = make_plan_case()
+        case = make_plan_case(own(self.client), )
         with override_settings(MAX_STATEMENT_CHARS=40):
             text = carry_over_statement(case)
         self.assertLessEqual(len(text), 40)
 
     def test_wrong_kind_of_case(self):
-        other = Case.objects.create(department="tribunal", statement="x", status="resolved", result={"ruling": {}})
+        other = Case.objects.create(owner=own(self.client), department="tribunal", statement="x", status="resolved", result={"ruling": {}})
         self.assertEqual(self.carry(other.number).status_code, 409)
         self.assertEqual(self.carry("BA-9999").status_code, 404)
 
@@ -243,7 +242,7 @@ class ExportTests(TestCase):
         return self.client.get(f"/api/cases/{case.number}/export/{fmt}/")
 
     def test_pending_markdown_shows_done_tasks_and_deadlines(self):
-        case = make_plan_case(done_tasks=[1])
+        case = make_plan_case(own(self.client), done_tasks=[1])
         resp = self.export(case)
         self.assertEqual(resp.status_code, 200)
         self.assertIn("attachment", resp["Content-Disposition"])
@@ -264,7 +263,7 @@ class ExportTests(TestCase):
         }
         for dept, result in made.items():
             with self.subTest(dept):
-                case = Case.objects.create(department=dept, statement="x", status="resolved", result=result)
+                case = Case.objects.create(owner=own(self.client), department=dept, statement="x", status="resolved", result=result)
                 resp = self.export(case)
                 self.assertEqual(resp.status_code, 200, resp.content)
                 self.assertIn(case.number, resp.content.decode())
@@ -274,7 +273,7 @@ class ExportTests(TestCase):
         self.assertIn("- [ ] **Review Priya's slides** (deadline: by Thursday)", brief)
 
     def test_ics_is_a_valid_todo_list(self):
-        case = make_plan_case(done_tasks=[0])
+        case = make_plan_case(own(self.client), done_tasks=[0])
         resp = self.export(case, "ics")
         self.assertEqual(resp["Content-Type"], "text/calendar; charset=utf-8")
         text = resp.content.decode()
@@ -289,31 +288,31 @@ class ExportTests(TestCase):
         self.assertNotIn("Clean room", text)
 
     def test_ics_escapes_and_folds(self):
-        case = make_plan_case()
+        case = make_plan_case(own(self.client), )
         case.result["plan"]["tasks"][0]["title"] = "Pay rent, bills; and " + "x" * 100 + " é"
         text = exports.to_ics(case)
-        self.assertIn("Pay rent\\, bills\; and", text)
+        self.assertIn("Pay rent\\, bills\\; and", text)
         for line in text.split("\r\n"):
             self.assertLessEqual(len(line.encode("utf-8")), 75)
         self.assertNotIn("\n ", text.replace("\r\n ", ""))             # folds use CRLF + space only
 
     def test_ics_only_for_pending(self):
-        case = Case.objects.create(department="briefing", statement="x", status="resolved",
+        case = Case.objects.create(owner=own(self.client), department="briefing", statement="x", status="resolved",
                                    result=briefing.validate(good_docket(), NOTES))
         self.assertEqual(self.export(case, "ics").status_code, 409)
 
     def test_unfinished_crisis_and_unknown_cases_are_not_exported(self):
-        failed = Case.objects.create(department="pending", statement="x", status="failed")
+        failed = Case.objects.create(owner=own(self.client), department="pending", statement="x", status="failed")
         self.assertEqual(self.export(failed).status_code, 409)
-        crisis = Case.objects.create(department="tribunal", statement="x", status="resolved",
+        crisis = Case.objects.create(owner=own(self.client), department="tribunal", statement="x", status="resolved",
                                      result={"ruling": {"crisis": True}, "notice": {"serious_notice": "Please talk to someone."}})
         self.assertEqual(self.export(crisis).status_code, 409)
-        self.assertEqual(self.export(make_plan_case(), "pdf").status_code, 404)
+        self.assertEqual(self.export(make_plan_case(own(self.client), ), "pdf").status_code, 404)
         self.assertEqual(self.client.get("/api/cases/NOPE-1/export/md/").status_code, 404)
 
     def test_export_never_contains_a_private_offices_full_text(self):
         secret = "SECRET-FULL-TEXT-" * 5
-        case = Case.objects.create(department="briefing", statement="preview only", status="resolved",
+        case = Case.objects.create(owner=own(self.client), department="briefing", statement="preview only", status="resolved",
                                    result=briefing.validate(good_docket(), NOTES))
         self.assertNotIn(secret, self.export(case).content.decode())
 
@@ -511,7 +510,7 @@ def make_pdf(text="Hello", pages=1):
         return len(objects)
 
     font = add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>")
-    kids, page_ids = [], []
+    kids = []
     pages_id = len(objects) + 1 + pages * 2        # reserved below
     for n in range(pages):
         line = text if isinstance(text, str) else text[n]

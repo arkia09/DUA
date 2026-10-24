@@ -7,8 +7,8 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' fill='%23f6f1e4' stroke='%237a1f2b' stroke-width='2'/%3E%3Ccircle cx='16' cy='15' r='10' fill='%23cdb98f' stroke='%231d2433' stroke-width='1.6'/%3E%3Cellipse cx='16' cy='17' rx='7' ry='6' fill='%23f6f1e4' stroke='%231d2433' stroke-width='1'/%3E%3Ccircle cx='12' cy='15' r='2' fill='%231d2433'/%3E%3Ccircle cx='20' cy='15' r='2' fill='%231d2433'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="{% static 'cases/style.css' %}">
 </head>
-<body data-page="{% block page_id %}{% endblock %}"{% block body_attrs %}{% endblock %}>
-<a class="skip" href="#main">Skip to the paperwork</a>
+<body data-page="{% block page_id %}{% endblock %}"{% if DEMO_MODE %} data-demo="1"{% endif %}{% block body_attrs %}{% endblock %}>
+<a class="skip" href="#main">Skip to content</a>
 {% include "cases/_mascot.html" %}
 <header class="masthead">
   <p class="eyebrow">Official government portal. Allegedly.<a class="clearance" id="clearance" href="{% url 'home' %}#record" hidden></a></p>
@@ -19,11 +19,13 @@
     <a href="{% url 'files' %}"{% if request.path == '/files/' %} aria-current="page"{% endif %}>Case files</a>
   </nav>
 </header>
+{% if DEMO_MODE %}<p class="demo-banner" role="note"><strong>Demo.</strong> No AI model is running here. Each office answers its sample inputs with pre-written results. Use the Try buttons on an office page. Any other input is refused.</p>{% endif %}
 <main id="main">
 {% block content %}{% endblock %}
 </main>
 <footer class="foot">
-  <p>Runs entirely on your own machine with a local open-weight model. Your paperwork never leaves the building. No sloths were rushed in the making of this website.</p>
+  {% if DEMO_MODE %}<p>Demo mode: the results are pre-written and no model is called. The real app runs on your own machine with a local model. No sloths were rushed in the making of this website.</p>
+  {% else %}<p>Runs on your own machine with a local open-weight model. Nothing you type leaves it. No sloths were rushed in the making of this website.</p>{% endif %}
   <p class="dnc-row"><button type="button" id="dnc" class="dnc">Do not press</button> <span id="dncMsg" class="meta" role="status"></span></p>
 </footer>
 <script src="{% static 'cases/app.js' %}"></script>

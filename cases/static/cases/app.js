@@ -14,17 +14,18 @@
     dl.append(el("dt", "", term), el("dd", "", value));
   }
   const pick = list => list[Math.floor(Math.random() * list.length)];
+  const DEMO = document.body.dataset.demo === "1";   // set by the server in demo mode
 
   /* ---------- the Sloth Officer (top-right staff ID badge) ---------- */
   const mascot = (() => {
     const svg = $("#sloth"), bubble = $("#bubble"), btn = $("#slothBtn");
     let timer = null;
     const IDLE = [
-      "Take a number. I will attend to you shortly. Possibly tomorrow.",
-      "I am not asleep. I am conducting a very long blink.",
-      "Everything urgent is, on inspection, optional.",
+      "Take a number. I will get to you eventually.",
+      "I am not asleep. I am blinking slowly.",
+      "Most urgent things are not.",
       "Please do not rush the sloth.",
-      "Efficiency is just panic with a clipboard.",
+      "Efficiency is panic with a clipboard.",
     ];
     function say(text, ms) {
       bubble.textContent = text;
@@ -44,7 +45,7 @@
   function officialNotice(label, text) {
     if (!text) return null;
     const n = el("aside", "notice");
-    n.append(el("small", "", label + " — for entertainment purposes only"), document.createTextNode(text));
+    n.append(el("small", "", label + " (for entertainment only)"), document.createTextNode(text));
     return n;
   }
   function questionsBox(qs, title) {
@@ -91,10 +92,10 @@
   }
 
   const DONE_LINES = [
-    "Closed. Nobody is more surprised than this Bureau.",
+    "Closed. The Bureau is surprised.",
     "Filed under Accomplished. A rare category.",
-    "Done. The Bureau will pretend it expected this.",
-    "Stamped complete. The Sloth Officer is moved, slowly.",
+    "Done. The Bureau will act like it expected this.",
+    "Stamped complete. The sloth nodded, slowly.",
   ];
   const LABELS = {do_now: "Do now", schedule: "Schedule", delegate: "Delegate", defer: "Deferred", deny: "Denied"};
   const EXCUSED = ["defer", "deny"];
@@ -121,7 +122,7 @@
   /* ---------- case renderers ---------- */
   function renderPending(c, frag, hooks) {
     const r = c.result, plan = el("section", "sheet");
-    plan.append(el("h2", "", "Case " + c.number + " — Action Plan"));
+    plan.append(el("h2", "", "Case " + c.number + ": Action Plan"));
     if (r.notice.summary_line) plan.append(el("p", "smug", r.notice.summary_line));
     const next = el("p", "next");
     next.append(el("strong", "", "Start here (under 5 minutes): "), document.createTextNode(r.plan.smallest_next_action));
@@ -163,14 +164,14 @@
             if (want) mascot.say(DONE_LINES[i % DONE_LINES.length]);
           } catch (e) {
             cb.checked = !want;
-            mascot.say("The stamp pad is dry. Your tick was not recorded.");
+            mascot.say("The tick was not saved. Try again.");
           } finally { cb.disabled = false; }
         });
         box.append(tick, note);
       }
       if (excuses[i]) {
         const q = el("blockquote", "excuse");
-        q.append(el("small", "", "Official excuse (fictional; do not submit to your teacher)"),
+        q.append(el("small", "", "Official excuse"),
                  document.createTextNode("“" + excuses[i] + "”"));
         box.append(q);
       }
@@ -204,9 +205,9 @@
       carry.disabled = left === 0;
     }
     updateProgress();
-    if (tickable) {
+    if (tickable && !DEMO) {
       const act = el("div", "actions");
-      act.append(carry, el("span", "meta", "Tomorrow? This files the open tasks as a fresh case and re-plans them. It takes as long as any new plan."));
+      act.append(carry, el("span", "meta", "Files the open tasks as a new case and plans them again."));
       plan.append(act);
     }
     frag.append(plan);
@@ -214,13 +215,13 @@
     if (n) frag.append(n);
 
     const k = excused.length;
-    mascot.say(k ? "I have excused " + k + (k === 1 ? " task" : " tasks") + ". Do not thank me. Do not rush."
-                 : "Regrettably, all of this must be done. I will supervise from here, slowly.");
+    mascot.say(k ? "I have excused " + k + (k === 1 ? " task" : " tasks") + ". Do not thank me."
+                 : "All of this has to be done. I will watch.");
   }
 
   function renderCorrespondence(c, frag) {
     const r = c.result, d = r.draft, sheet = el("section", "sheet");
-    sheet.append(el("h2", "", "Case " + c.number + " — Your Message"));
+    sheet.append(el("h2", "", "Case " + c.number + ": Your Message"));
     if (c.options && c.options.tone) sheet.append(el("p", "meta", "Tone: " + c.options.tone +
       (c.options.incoming ? " · Reply to the message you pasted" : "")));
     const full = (subject, body) => (subject ? "Subject: " + subject + "\n\n" : "") + body;
@@ -251,14 +252,14 @@
     frag.append(sheet);
     const n = officialNotice("Internal memorandum", r.notice.official_memo);
     if (n) frag.append(n);
-    mascot.say("Memorandum prepared. You may now send it, or reconsider everything. Both are valid.");
+    mascot.say("Draft ready. Send it or rewrite it.");
   }
 
   /* ---------- Commission for Unnecessarily Complicated Documents ---------- */
   function renderDocuments(c, frag) {
     const r = c.result.review, n = c.result.notice || {}, s = r.stats || {};
     const sheet = el("section", "sheet");
-    sheet.append(el("h2", "", "Case " + c.number + " — Document Review"));
+    sheet.append(el("h2", "", "Case " + c.number + ": Document Review"));
     const o = c.options || {};
     sheet.append(el("p", "meta", (o.filename ? "File: " + o.filename : "Pasted text") +
       (o.pages ? " · " + o.pages + (o.pages === 1 ? " page" : " pages") : "") +
@@ -324,14 +325,14 @@
     if (ack) frag.append(ack);
 
     const nd = (r.deadlines || []).length;
-    mascot.say(nd ? "I have found " + nd + (nd === 1 ? " deadline" : " deadlines") + ". I have not hurried toward them."
-                  : "No stated deadlines. I find this restful, but please read the unclear parts.");
+    mascot.say(nd ? "Found " + nd + (nd === 1 ? " deadline" : " deadlines") + ". I am not hurrying."
+                  : "No deadlines found. Read the unclear parts anyway.");
   }
 
   /* ---------- Morning Docket Office ---------- */
   function renderBriefing(c, frag) {
     const r = c.result.docket, n = c.result.notice || {}, sheet = el("section", "sheet"), o = c.options || {};
-    sheet.append(el("h2", "", "Case " + c.number + " — Today's Docket"));
+    sheet.append(el("h2", "", "Case " + c.number + ": Today's Docket"));
     sheet.append(el("p", "meta", (o.filename ? "File: " + o.filename : "Pasted notes") +
       (o.pages ? " · " + o.pages + (o.pages === 1 ? " page" : " pages") : "") +
       (o.words ? " · " + o.words + " words" : "") + " · The full text was not saved."));
@@ -378,15 +379,15 @@
     const note = officialNotice("Notice of Daily Obligations", n.notice);
     if (note) frag.append(note);
     const k = r.top.length;
-    mascot.say("Today's docket: " + k + (k === 1 ? " item" : " items") + ". The rest may wait. I will not be hurrying them.");
+    mascot.say("Today's docket: " + k + (k === 1 ? " item" : " items") + ". The rest can wait.");
   }
 
   /* ---------- Tribunal for Minor Inconveniences ---------- */
   const APPEALS = [
-    "Your appeal has been received and heard by the same judge. It is dismissed, with sympathy.",
-    "The appeal was considered at length by the judge who made the original ruling. The ruling stands.",
-    "Appeal denied. The judge notes that he found your arguments very persuasive the first time, too.",
-    "After careful reflection, in a chair, the court affirms its own decision. Costs: one sigh.",
+    "Appeal heard by the same judge. Dismissed.",
+    "The judge who made the ruling reviewed it. The ruling stands.",
+    "Appeal denied. The judge liked your arguments the first time too.",
+    "The court thought about it in a chair and agrees with itself. Costs: one sigh.",
   ];
   let appealCount = 0;
 
@@ -394,13 +395,13 @@
     const r = c.result.ruling, n = c.result.notice || {};
     if (r.crisis) {
       const box = el("section", "sheet");
-      box.append(el("h2", "", "Case " + c.number + " — Not for this Tribunal"), el("p", "venue", n.serious_notice));
+      box.append(el("h2", "", "Case " + c.number + ": Not for this Tribunal"), el("p", "venue", n.serious_notice));
       frag.append(box);
       mascot.say("I have put the stamp down. Please talk to someone.");
       return;
     }
     const sheet = el("section", "sheet");
-    sheet.append(el("h2", "", "Case " + c.number + " — Ruling"));
+    sheet.append(el("h2", "", "Case " + c.number + ": Ruling"));
     if (r.serious) sheet.append(el("p", "venue", n.serious_notice));
 
     const rec = el("p", "next");
@@ -428,7 +429,7 @@
 
     if (!r.serious && (n.case_title || n.verdict)) {
       const j = el("aside", "notice judgment");
-      j.append(el("small", "", "Judgment — for entertainment purposes only"));
+      j.append(el("small", "", "Judgment (for entertainment only)"));
       if (n.case_title) j.append(el("h3", "", n.case_title));
       if (n.findings) j.append(el("p", "", n.findings));
       if (n.verdict) j.append(el("p", "", "Verdict: " + n.verdict));
@@ -440,12 +441,12 @@
       b.type = "button";
       b.addEventListener("click", () => {
         result.textContent = APPEALS[appealCount++ % APPEALS.length];
-        mascot.say("The appeal has been heard. By the same judge. It went as you would expect.");
+        mascot.say("Appeal heard by the same judge. It went as you would expect.");
       });
       j.append(b, result);
       frag.append(j);
     }
-    mascot.say(r.serious ? "This one matters more than a Tribunal. Please consider the considerations."
+    mascot.say(r.serious ? "This one matters more than a Tribunal can handle. Talk to someone qualified."
                          : "The court has ruled. You may appeal. It will not help.");
   }
 
@@ -467,7 +468,7 @@
           box.append(b);
         }
         frag.append(box);
-        mascot.say("The review has been postponed. By me. Retry when you feel ready.");
+        mascot.say("The review fell over. Try again.");
       } else if (c.result && c.result.plan) renderPending(c, frag, hooks);
       else if (c.result && c.result.draft) renderCorrespondence(c, frag);
       else if (c.result && c.result.review) renderDocuments(c, frag);
@@ -530,7 +531,7 @@
         if (b.tagName === "A") b.href = "/files/" + encodeURIComponent(c.number) + "/";
         else { b.type = "button"; b.addEventListener("click", () => onSelect(c)); }
         const title = el("div");
-        title.append(el("strong", "", c.number + " "), document.createTextNode((DEPT_NAMES[c.department] || c.department) + " — "),
+        title.append(el("strong", "", c.number + " "), document.createTextNode((DEPT_NAMES[c.department] || c.department) + ": "),
                      el("span", "st-" + c.status, c.status.replace("_", " ")));
         b.append(title, el("div", "meta", new Date(c.created_at).toLocaleString() + " · " + c.statement.slice(0, 70) + (c.statement.length > 70 ? "…" : "")));
         li.append(b);
@@ -541,12 +542,12 @@
 
   /* ---------- department page: form, loading, submit, retry ---------- */
   const LOADING = [
-    "The Sloth Officer has been notified. He is finishing a yawn.",
-    "Your file is being processed at the speed of dignity.",
-    "Stamping things. Slowly. With feeling.",
+    "The Sloth Officer has been told. He is finishing a yawn.",
+    "Processing your file at the usual speed. Slow.",
+    "Stamping things. Slowly.",
     "Consulting the Department of Meetings About Meetings.",
-    "Please remain seated. Do not rush the sloth.",
-    "Your request is being reviewed by someone who is in no hurry whatsoever.",
+    "Please stay seated. Do not rush the sloth.",
+    "Someone in no hurry is reviewing your request.",
   ];
 
   function initDepartment() {
@@ -570,12 +571,12 @@
       out.replaceChildren(box);
       const tick = () => {
         if (n++ % 4 === 0) line.textContent = LOADING[i++ % LOADING.length];   // new line every 4 seconds
-        secs.textContent = "Elapsed: " + Math.floor((Date.now() - t0) / 1000) + "s. The Department regrets nothing.";
+        secs.textContent = "Elapsed: " + Math.floor((Date.now() - t0) / 1000) + "s.";
       };
       tick();
       ticker = setInterval(tick, 1000);
       mascot.reviewing(true);
-      mascot.say("Reviewing your case. Slowly. Thoroughly. Mostly slowly.", 0);
+      mascot.say("Reviewing your case. Slowly.", 0);
     }
     function stopLoading() { clearInterval(ticker); mascot.reviewing(false); }
 
@@ -604,8 +605,8 @@
       try {
         const res = await post("/api/cases/" + encodeURIComponent(number) + "/shred/");
         if (!res.ok) throw new Error();
-        showMessage("Case " + number + " has been shredded. The Department has no memory of it, which is its natural state.");
-        mascot.say("Shredded. I did not even look at it. Much.");
+        showMessage("Case " + number + " shredded. The Department has already forgotten it.");
+        mascot.say("Shredded. I barely looked at it.");
       } catch (e) { showMessage("The shredder jammed. The case was not deleted.", true); }
       loadHistory(show);
     }
@@ -675,11 +676,11 @@
         send("/api/requests/upload/", {form: fd});
         return;
       }
-      const body = {department: config.department, statement: ta.value};
-      if (config.tone && tone) body.options = {tone: tone.value};
-      if (incoming && incoming.value.trim()) body.options.incoming = incoming.value;
-      if (prefs) body.options = {preferences: prefs.value};
-      send("/api/requests/", {json: body});
+      const options = {};
+      if (config.tone && tone) options.tone = tone.value;
+      if (incoming && incoming.value.trim()) options.incoming = incoming.value;
+      if (prefs) options.preferences = prefs.value;
+      send("/api/requests/", {json: {department: config.department, statement: ta.value, options}});
     });
     loadHistory(show);
     const GREETING = {
@@ -721,7 +722,7 @@
         try {
           const res = await post("/api/cases/" + encodeURIComponent(n) + "/shred/");
           if (!res.ok) throw new Error();
-          out.replaceChildren(el("div", "sheet", "Case " + n + " has been shredded. This page will now be unable to find it, as intended."));
+          out.replaceChildren(el("div", "sheet", "Case " + n + " shredded. This page can no longer find it, as intended."));
         } catch (e) { out.replaceChildren(el("div", "sheet error", "The shredder jammed. The case was not deleted.")); }
       },
     };

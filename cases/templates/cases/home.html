@@ -3,9 +3,8 @@
 {% block content %}
 <section class="sheet intro">
   <h2>Front desk</h2>
-  <p>Welcome. The Department exists to take on the work you would rather not do. Choose an office below, hand over your
-  problem, and receive something genuinely useful, delivered with unnecessary ceremony. Everything is processed at a
-  dignified pace.</p>
+  <p>Pick an office, hand over your problem and get a useful answer back. The help is plain. The jokes are labelled
+  as jokes.</p>
 </section>
 
 <div class="directory">
@@ -32,7 +31,7 @@
 
 <section class="sheet" aria-labelledby="recent-h">
   <h2 id="recent-h">Recent case files</h2>
-  <p class="meta" id="histEmpty">No cases on file. The archive is, regrettably, spotless.</p>
+  <p class="meta" id="histEmpty">No cases yet.</p>
   <ul class="histList" id="histList" data-limit="5"></ul>
   <p><a href="{% url 'files' %}">See every case on file</a></p>
 </section>

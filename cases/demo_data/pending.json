@@ -1,0 +1,134 @@
+[
+  {
+    "text": "Assignment due Friday, reply to Priya's email, reorganise my bookmarks, water the plant, maybe learn guitar someday",
+    "raw": {
+      "tasks": [
+        {
+          "title": "Assignment",
+          "urgency": "critical",
+          "verdict": "do_now",
+          "reason": "It has a stated deadline of Friday and is probably the biggest task on the list, so slipping costs the most.",
+          "deadline": "Friday",
+          "depends_on": [],
+          "next_step": "Open the assignment and write down what is still missing.",
+          "minimum_effort": "Submit a complete, passable version.",
+          "excuse": "A seagull took the only copy of the instructions.",
+          "permit_clause": ""
+        },
+        {
+          "title": "Reply to Priya's email",
+          "urgency": "medium",
+          "verdict": "schedule",
+          "reason": "A short reply clears one open item. No deadline was stated.",
+          "deadline": null,
+          "depends_on": [],
+          "next_step": "Write a two-line reply and send it.",
+          "minimum_effort": "Send a short answer, or a date you will answer by.",
+          "excuse": "The email is stuck behind a very polite pigeon.",
+          "permit_clause": ""
+        },
+        {
+          "title": "Water the plant",
+          "urgency": "low",
+          "verdict": "schedule",
+          "reason": "It takes a minute and a plant cannot wait forever. No deadline was stated.",
+          "deadline": null,
+          "depends_on": [],
+          "next_step": "Fill a glass and water it.",
+          "minimum_effort": "Give it one glass of water and move on.",
+          "excuse": "The plant says it is fine. The plant is lying.",
+          "permit_clause": ""
+        },
+        {
+          "title": "Reorganise my bookmarks",
+          "urgency": "low",
+          "verdict": "defer",
+          "reason": "No deadline, and nothing else on the list depends on it.",
+          "deadline": null,
+          "depends_on": [],
+          "next_step": "If you start, set a ten-minute timer.",
+          "minimum_effort": "Delete the ten bookmarks you recognise least.",
+          "excuse": "The bookmarks are in a union dispute.",
+          "permit_clause": "someone asks where a bookmark went"
+        },
+        {
+          "title": "Learn guitar",
+          "urgency": "low",
+          "verdict": "deny",
+          "reason": "You wrote \"maybe\" and \"someday\", so there is no plan and no deadline.",
+          "deadline": null,
+          "depends_on": [],
+          "next_step": "Write \"guitar\" on a someday list.",
+          "minimum_effort": "Nothing needed. It can stay an idea.",
+          "excuse": "Every guitar in the area is on strike.",
+          "permit_clause": "someone hands you a guitar"
+        }
+      ],
+      "smallest_next_action": "Open the assignment and list what is still missing.",
+      "clarifying_questions": [
+        "How long is the assignment, and how much of it is done?"
+      ],
+      "official_notice": "One assignment is due Friday. The guitar has waited this long."
+    }
+  },
+  {
+    "text": "Pay the electricity bill by the 25th, book a dentist appointment, clear 400 unread newsletters, call grandma",
+    "raw": {
+      "tasks": [
+        {
+          "title": "Pay the electricity bill",
+          "urgency": "high",
+          "verdict": "do_now",
+          "reason": "It is money owed with a stated date of the 25th, so it ranks first.",
+          "deadline": "by the 25th",
+          "depends_on": [],
+          "next_step": "Log in to your electricity account and open the bill.",
+          "minimum_effort": "Pay the full amount online and skip filing the receipt.",
+          "excuse": "The bill was delivered to a lighthouse.",
+          "permit_clause": ""
+        },
+        {
+          "title": "Book a dentist appointment",
+          "urgency": "medium",
+          "verdict": "schedule",
+          "reason": "It is about your health and has no stated date, so book it soon but after the bill.",
+          "deadline": null,
+          "depends_on": [],
+          "next_step": "Find the dentist's number or online booking page.",
+          "minimum_effort": "Book any slot in the next few weeks.",
+          "excuse": "The dentist's phone number is hiding behind the couch.",
+          "permit_clause": ""
+        },
+        {
+          "title": "Call grandma",
+          "urgency": "medium",
+          "verdict": "schedule",
+          "reason": "A short call is easy to put off, and no deadline was stated.",
+          "deadline": null,
+          "depends_on": [],
+          "next_step": "Text her to ask when she is free for a call.",
+          "minimum_effort": "Make a five-minute call.",
+          "excuse": "Grandma's phone is, by tradition, in another room.",
+          "permit_clause": ""
+        },
+        {
+          "title": "Clear 400 unread newsletters",
+          "urgency": "low",
+          "verdict": "defer",
+          "reason": "No deadline, and nothing in the list depends on it.",
+          "deadline": null,
+          "depends_on": [],
+          "next_step": "Search for \"unsubscribe\" and bulk-delete what you find.",
+          "minimum_effort": "Select everything and mark it as read.",
+          "excuse": "The newsletters multiply when nobody is looking.",
+          "permit_clause": "the newsletters reach 500"
+        }
+      ],
+      "smallest_next_action": "Open the electricity bill and pay it.",
+      "clarifying_questions": [
+        "Is there a date you need the dentist appointment by?"
+      ],
+      "official_notice": "One bill has a deadline. The newsletters do not."
+    }
+  }
+]

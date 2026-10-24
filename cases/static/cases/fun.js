@@ -161,7 +161,7 @@
     });
     frag.append(el("h3", "sec", "Hidden things"), secrets);
     if (found === SECRETS.length && record.visited.length === Object.keys(OFFICES).length) {
-      frag.append(el("p", "warn", "Every office visited, every secret found. The Department has nothing left to show you, and has been instructed to look busy."));
+      frag.append(el("p", "warn", "Every office visited, every secret found. There is nothing left to show you."));
     }
     const reset = el("button", "small", "Erase my record");
     reset.type = "button";
@@ -171,7 +171,7 @@
       save();
       renderRecord();
       renderClearance();
-      toast("Your record has been erased. The Department has no memory of you, which is mutual.");
+      toast("Record erased. The Department has already forgotten you.");
     });
     frag.append(reset);
     box.replaceChildren(frag);
@@ -331,7 +331,7 @@
     }, 2500);
     const REASONS = [
       "Dismissed. The complaint was found to be a complaint.",
-      "Dismissed on the grounds that the Department is, regrettably, not responsible for anything.",
+      "Dismissed. The Department is not responsible for anything.",
       "Dismissed. A reply will be mailed in three to five fiscal years.",
       "Dismissed, with sympathy, which is the only thing we have in stock.",
       "Referred to the Department of Complaints About This Department, which has been closed since Tuesday.",
@@ -343,7 +343,7 @@
       const box = el("section", "sheet");
       box.append(el("h2", "", "Complaint " + ticket + " received"),
                  el("p", "", "Status: " + pick(REASONS)),
-                 el("p", "meta", "Your complaint was not sent anywhere. It has been read by nobody, and is now filed in this browser tab, which will forget it shortly."));
+                 el("p", "meta", "Your complaint was not sent anywhere. Nobody read it. This tab will forget it shortly."));
       out.replaceChildren(box);
       $("#complaint").value = "";
     });
@@ -355,8 +355,8 @@
     const say = t => { log.textContent = t; };
     let coffee = 0, wake = 0, fridge = 0;
     const COFFEE = ["He declines. Slowly. It takes about a minute.", "He accepts the cup, looks at it, and puts it down for later.",
-                    "The coffee has gone cold. So has the sloth's interest, which was already low.", "He says, \"Not now.\" He says it like a long vowel."];
-    const WAKE = ["He is not asleep. He is resting his eyes in a thorough and committed way.", "One eye opens. It closes again, as though it were never open.",
+                    "The coffee went cold. So did his interest.", "He says, \"Not now.\" He says it like a long vowel."];
+    const WAKE = ["He is not asleep. He is resting his eyes.", "One eye opens, then closes.",
                   "\"I was listening,\" he says. He was not.", "He has resigned. Then un-resigned. Nothing has changed."];
     const FRIDGE = ["One yogurt. The label reads: DO NOT TOUCH, DEPARTMENT AUDIT.", "A single lettuce, filed under Pending.",
                     "A note: \"Whoever took my lunch, I forgive you. Slowly.\"", "The fridge is full of forms. Several are cold."];

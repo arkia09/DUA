@@ -1,0 +1,86 @@
+[
+  {
+    "text": "Politely tell my manager I cannot take on the extra project this month because I am already at capacity",
+    "raw": {
+      "subject": "Extra project this month",
+      "body": "Hi [manager's name],\n\nThanks for thinking of me for the extra project. I'm already at capacity this month, so I can't take it on without something else slipping.\n\nIf it is urgent, I'm happy to talk through my current workload and what could move.\n\nBest regards,\n[Your name]",
+      "alternatives": [
+        {
+          "label": "Shorter",
+          "body": "Hi [manager's name],\n\nThanks for the offer. I'm at capacity this month and can't take on the extra project.\n\nBest,\n[Your name]"
+        },
+        {
+          "label": "Ask about priorities",
+          "body": "Hi [manager's name],\n\nThanks for asking. My workload is full this month. If the extra project matters more than something I'm already doing, can we talk about which should come first?\n\nBest regards,\n[Your name]"
+        }
+      ],
+      "clarifying_questions": [
+        "Do you want to be considered for this project later?"
+      ],
+      "incoming_questions": [],
+      "official_memo": "One employee has declined one project. This took four forms and is now complete."
+    }
+  },
+  {
+    "text": "Follow up with a recruiter who has not replied in a week, without sounding desperate",
+    "raw": {
+      "subject": "Following up on [role]",
+      "body": "Hi [recruiter's name],\n\nI wanted to follow up on my last message about [role]. I'm still interested and happy to send anything else you need.\n\nCould you let me know where things stand when you have a moment?\n\nThanks,\n[Your name]",
+      "alternatives": [
+        {
+          "label": "Shorter",
+          "body": "Hi [recruiter's name],\n\nJust checking in on [role]. Is there an update?\n\nThanks,\n[Your name]"
+        },
+        {
+          "label": "Warmer",
+          "body": "Hi [recruiter's name],\n\nI hope your week is going well. I'm following up on [role] and wanted to check whether there is anything more you need from me.\n\nThanks,\n[Your name]"
+        }
+      ],
+      "clarifying_questions": [
+        "How did you contact them the first time: email, LinkedIn or phone?",
+        "Is there a deadline on your side, such as another offer?"
+      ],
+      "incoming_questions": [],
+      "official_memo": "The recruiter has been quiet for a week. The Office has no comment on recruiters."
+    }
+  },
+  {
+    "text": "Yes to Thursday but I can only stay an hour. I have not seen the budget file.",
+    "incoming": "Hi, can you come to the planning meeting on Thursday at 2? Also, did you get the budget file I sent last week? And who is covering the front desk while we are in there?",
+    "raw": {
+      "subject": "Re: Thursday planning meeting",
+      "body": "Hi [name],\n\nYes, I can come to the planning meeting on Thursday at 2, but I can only stay for an hour.\n\nI haven't seen the budget file. Could you send it again?\n\nAs for the front desk: [your answer].\n\nThanks,\n[Your name]",
+      "alternatives": [
+        {
+          "label": "Shorter",
+          "body": "Hi [name],\n\nThursday at 2 works, but only for an hour. I haven't seen the budget file, so please resend it. Front desk cover: [your answer].\n\nThanks,\n[Your name]"
+        },
+        {
+          "label": "Agenda request",
+          "body": "Hi [name],\n\nI'll be there on Thursday at 2 for the first hour, so please put anything that needs me early in the agenda. I haven't seen the budget file. Could you send it again? As for the front desk: [your answer].\n\nThanks,\n[Your name]"
+        }
+      ],
+      "clarifying_questions": [
+        "Do you know who can cover the front desk on Thursday?"
+      ],
+      "incoming_questions": [
+        {
+          "question": "Can you come to the planning meeting on Thursday at 2?",
+          "quote": "can you come to the planning meeting on Thursday at 2",
+          "answered": true
+        },
+        {
+          "question": "Did you get the budget file sent last week?",
+          "quote": "did you get the budget file I sent last week",
+          "answered": true
+        },
+        {
+          "question": "Who is covering the front desk during the meeting?",
+          "quote": "who is covering the front desk while we are in there",
+          "answered": false
+        }
+      ],
+      "official_memo": "Three questions came in and one cannot be answered from your notes. The front desk is unstaffed on paper."
+    }
+  }
+]

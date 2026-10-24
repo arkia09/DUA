@@ -39,6 +39,8 @@ class Case(models.Model):
     result = models.JSONField(null=True, blank=True)
     options = models.JSONField(default=dict, blank=True)  # e.g. {"tone": "firm"}
     done_tasks = models.JSONField(default=list, blank=True)  # indexes of Pending tasks the user ticked off
+    # Session key of the visitor who filed the case. Every page and API call only sees the visitor's own cases.
+    owner = models.CharField(max_length=40, blank=True, default="", db_index=True, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):

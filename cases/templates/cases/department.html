@@ -42,14 +42,14 @@
   {% endif %}
   <span class="counter" id="counter" aria-live="off"></span>
   <button id="submit" type="submit">{{ page.button }}</button>
-  <p class="meta">Tip: Ctrl+Enter files the form without any further effort on your part.</p>
+  <p class="meta">Tip: Ctrl+Enter submits the form.</p>
 </form>
 
 <div id="out" aria-live="polite"></div>
 
 <section class="sheet" aria-labelledby="recent-h">
   <h2 id="recent-h">Cases filed at this office</h2>
-  <p class="meta" id="histEmpty">No cases on file. The archive is, regrettably, spotless.</p>
+  <p class="meta" id="histEmpty">No cases yet.</p>
   <ul class="histList" id="histList" data-department="{{ department.slug }}"></ul>
 </section>
 {{ config|json_script:"page-config" }}

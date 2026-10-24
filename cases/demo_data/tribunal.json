@@ -1,0 +1,134 @@
+[
+  {
+    "text": "Should I order pizza or sushi tonight?",
+    "preferences": "cheap, quick, and I do not want to wash dishes",
+    "raw": {
+      "options": [
+        {
+          "name": "Pizza",
+          "pros": [
+            "Often the cheaper of the two.",
+            "Usually arrives quickly.",
+            "Can be eaten from the box, so no dishes."
+          ],
+          "cons": [
+            "Heavier, so you may feel sluggish afterwards."
+          ]
+        },
+        {
+          "name": "Sushi",
+          "pros": [
+            "Light, and it usually comes in containers, so little washing up."
+          ],
+          "cons": [
+            "Often costs more than pizza.",
+            "Quality varies a lot between places."
+          ]
+        }
+      ],
+      "recommended_option": "Pizza",
+      "reasoning": "Pizza fits all three things you listed: it is usually cheaper, delivery tends to be quick, and it can be eaten from the box without washing dishes. Sushi can also come without dishes, but it tends to cost more. This is a general comparison, since no prices were given.",
+      "preferences_used": [
+        "cheap",
+        "quick",
+        "do not want to wash dishes"
+      ],
+      "clarifying_questions": [
+        "Is there a delivery fee on either option?"
+      ],
+      "serious_topic": false,
+      "case_title": "The Applicant v. Dinner",
+      "findings": "The applicant is hungry and does not want to wash up. The court finds this reasonable.",
+      "verdict": "Pizza.",
+      "sentence": "The applicant must not fold the box neatly.",
+      "appeal_procedure": "Appeals go to the same judge, who also likes pizza."
+    }
+  },
+  {
+    "text": "Do I reply to this group chat now or tomorrow morning?",
+    "preferences": "I am tired and the topic is not urgent",
+    "raw": {
+      "options": [
+        {
+          "name": "Reply now",
+          "pros": [
+            "Gets it off your list tonight.",
+            "The chat gets an answer sooner."
+          ],
+          "cons": [
+            "You are tired, so the reply may be worse than it needs to be.",
+            "It can start a back-and-forth that keeps you up."
+          ]
+        },
+        {
+          "name": "Reply tomorrow morning",
+          "pros": [
+            "You will be rested and can write a clearer reply.",
+            "The topic is not urgent, so waiting costs little."
+          ],
+          "cons": [
+            "Someone may read the silence as a no.",
+            "It is one more thing to remember in the morning."
+          ]
+        }
+      ],
+      "recommended_option": "Reply tomorrow morning",
+      "reasoning": "You said you are tired and the topic is not urgent. Waiting until morning costs little and should give you a better reply. If someone in the chat needs a decision tonight, a quick holding message would cover that.",
+      "preferences_used": [
+        "tired",
+        "not urgent"
+      ],
+      "clarifying_questions": [
+        "Is anyone in the chat waiting on you for a decision?"
+      ],
+      "serious_topic": false,
+      "case_title": "The Applicant v. The Group Chat",
+      "findings": "The chat has been quiet for a while and will survive the night.",
+      "verdict": "Reply tomorrow morning.",
+      "sentence": "Mute the chat until 8am.",
+      "appeal_procedure": "Appeals are heard by the same judge, who is also tired."
+    }
+  },
+  {
+    "text": "Should I take the bus or walk to the library?",
+    "raw": {
+      "options": [
+        {
+          "name": "Take the bus",
+          "pros": [
+            "Faster if the library is far.",
+            "Keeps you dry in bad weather."
+          ],
+          "cons": [
+            "Depends on the timetable, so you may have to wait.",
+            "Costs a fare."
+          ]
+        },
+        {
+          "name": "Walk",
+          "pros": [
+            "Free, and on your own schedule.",
+            "Some exercise."
+          ],
+          "cons": [
+            "Slower if the library is far.",
+            "Unpleasant in bad weather."
+          ]
+        }
+      ],
+      "recommended_option": "Walk",
+      "reasoning": "This is a provisional recommendation based on general considerations, since no preferences were given. Walking costs nothing and does not depend on a timetable. The bus is the better choice if the library is far or the weather is bad.",
+      "preferences_used": [],
+      "clarifying_questions": [
+        "What matters most to you here: time, cost or comfort?",
+        "How far is the library?"
+      ],
+      "serious_topic": false,
+      "case_title": "The Applicant v. The Bus",
+      "findings": "The court was not told how far the library is. It is guessing, which is not recommended in court.",
+      "verdict": "Walk.",
+      "sentence": "Wave at the bus as it goes past.",
+      "appeal_procedure": "Appeals are heard by the same judge, who also walked."
+    }
+  }
+]

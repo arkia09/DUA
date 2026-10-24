@@ -1,0 +1,109 @@
+[
+  {
+    "text": "Dentist Tuesday 3pm. Priya asked if I can review her slides by Thursday. Landlord says the rent is due on the 1st. Should probably clear my inbox at some point. Mum's birthday is on Saturday and I have no gift. Maybe repaint the shelf. Gym membership renewal email, no idea when it expires.",
+    "raw": {
+      "top": [
+        {
+          "title": "Dentist appointment",
+          "why": "It is a fixed appointment at a set time.",
+          "next_step": "Put it in your calendar with a reminder and check how long the trip takes.",
+          "quote": "Dentist Tuesday 3pm",
+          "deadline": "Tuesday 3pm"
+        },
+        {
+          "title": "Review Priya's slides",
+          "why": "Priya is waiting on your review and the notes give a Thursday deadline.",
+          "next_step": "Open the slides and skim them once, noting anything that needs a real fix.",
+          "quote": "Priya asked if I can review her slides by Thursday",
+          "deadline": "Thursday"
+        },
+        {
+          "title": "Get a gift for your mum",
+          "why": "Her birthday is on Saturday and you do not have a gift yet.",
+          "next_step": "Pick one gift idea and check whether it can arrive before Saturday.",
+          "quote": "Mum's birthday is on Saturday and I have no gift",
+          "deadline": "Saturday"
+        }
+      ],
+      "can_wait": [
+        {
+          "title": "Clear the inbox",
+          "why": "The notes give no deadline for it.",
+          "quote": "Should probably clear my inbox at some point",
+          "deadline": null
+        },
+        {
+          "title": "Repaint the shelf",
+          "why": "It is marked \"maybe\" and has no deadline.",
+          "quote": "Maybe repaint the shelf",
+          "deadline": null
+        }
+      ],
+      "heads_up": [
+        {
+          "title": "Rent due",
+          "when": "the 1st",
+          "quote": "Landlord says the rent is due on the 1st"
+        }
+      ],
+      "one_liner": "Three things have fixed days this week: the dentist, Priya's slides and your mum's gift. Rent is due on the 1st.",
+      "clarifying_questions": [
+        "When does the gym membership expire?"
+      ],
+      "notice": "You have a dentist, a deadline and a birthday. The shelf has waited this long and will cope."
+    }
+  },
+  {
+    "text": "Standup moved to 10am. Need to send the invoice to Daniel before end of day Friday. Someone in the group chat wants to plan a trip in March, nothing decided. Water bill arrived, due in two weeks. Learn to juggle. Call the bank about the card they blocked, it is declined everywhere.",
+    "raw": {
+      "top": [
+        {
+          "title": "Call the bank about the blocked card",
+          "why": "The card is declined everywhere, so it is no use until it is unblocked.",
+          "next_step": "Find the number on the back of the card or in your banking app and call it.",
+          "quote": "Call the bank about the card they blocked, it is declined everywhere",
+          "deadline": null
+        },
+        {
+          "title": "Send the invoice to Daniel",
+          "why": "The notes give a deadline of the end of Friday.",
+          "next_step": "Open the invoice, check the amount and send it to Daniel.",
+          "quote": "Need to send the invoice to Daniel before end of day Friday",
+          "deadline": "before end of day Friday"
+        },
+        {
+          "title": "Standup at 10am",
+          "why": "The time has changed, so your usual plan for the morning may be off.",
+          "next_step": "Update your calendar to 10am.",
+          "quote": "Standup moved to 10am",
+          "deadline": "10am"
+        }
+      ],
+      "can_wait": [
+        {
+          "title": "Learn to juggle",
+          "why": "The notes give no deadline for it.",
+          "quote": "Learn to juggle",
+          "deadline": null
+        }
+      ],
+      "heads_up": [
+        {
+          "title": "Water bill",
+          "when": "due in two weeks",
+          "quote": "Water bill arrived, due in two weeks"
+        },
+        {
+          "title": "Group trip in March",
+          "when": "March",
+          "quote": "wants to plan a trip in March"
+        }
+      ],
+      "one_liner": "The blocked card and Friday's invoice need attention first. The water bill is due in two weeks.",
+      "clarifying_questions": [
+        "Which card pays the water bill?"
+      ],
+      "notice": "Your card is blocked, an invoice is due and the standup moved. Juggling is not on today's agenda."
+    }
+  }
+]

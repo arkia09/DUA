@@ -102,24 +102,22 @@ def build_user_prompt(statement: str, options=None, department="pending") -> str
 
 
 # Deterministic jokes live here, not in the model
-RECEIVED = "Your request has been received. We regret to inform you that we were not expecting it."
-MODEL_FAILED = "Our AI officer is currently attending a mandatory meeting about meeting efficiency."
+RECEIVED = "Request received. We were not expecting it."
+MODEL_FAILED = "The AI officer is in a meeting about meetings. Try again."
 
 
 # ---- Site directory and per-page copy (single source of truth for the home page and department pages) ----
 DIRECTORY = [
     {
         "slug": "briefing", "code": "MD", "name": "Morning Docket Office", "open": True,
-        "purpose": "Reads your overnight pile of notes, to-dos, messages or chat export, so that you start the day "
-                   "knowing the few things that actually matter.",
+        "purpose": "Reads your pile of notes, to-dos, messages or chat export and tells you what matters today.",
         "gives": "Today's top three (each with a quote you can check), what can safely wait, what is coming up, and a "
                  "Notice of Daily Obligations nobody asked for.",
         "cta": "Collect today's docket",
     },
     {
         "slug": "pending", "code": "BA", "name": "Bureau of Pending Affairs", "open": True,
-        "purpose": "Turns your panicked brain dump into a ranked plan, and officially excuses the tasks that "
-                   "do not deserve your time.",
+        "purpose": "Turns a messy to-do list into a ranked plan, and excuses the tasks that do not deserve your time.",
         "gives": "Priorities, next steps, the minimum effort to be done, and permits to ignore the rest.",
         "cta": "Enter the Bureau",
     },
@@ -133,8 +131,8 @@ DIRECTORY = [
     },
     {
         "slug": "documents", "code": "CD", "name": "Commission for Unnecessarily Complicated Documents", "open": True,
-        "purpose": "Reads the long, frightening document so that you do not have to. Paste it in, or hand over a "
-                   ".txt, .md or text-based .pdf file.",
+        "purpose": "Reads the long document you have been avoiding. Paste it in, or upload a .txt, .md or "
+                   "text-based .pdf file.",
         "gives": "A plain-language summary, the deadlines and requirements the document actually states (each with "
                  "a quote you can check), what is unclear, and an official complexity rating.",
         "cta": "Submit a document",
@@ -152,7 +150,7 @@ DIRECTORY = [
 
 PAGES = {
     "briefing": {
-        "prompt": "Paste the pile: notes, to-do lists, messages, a chat export, anything from overnight:",
+        "prompt": "Paste your notes, to-dos, messages or a chat export:",
         "placeholder": "e.g. Dentist Tuesday 3pm. Priya asked if I can review her slides by Thursday. Landlord says the "
                        "rent is due on the 1st. Should probably clear my inbox. Mum's birthday on Saturday, no gift yet.",
         "button": "Collect today's docket",
@@ -170,7 +168,7 @@ PAGES = {
         ],
     },
     "pending": {
-        "prompt": "Describe everything you have yet to do, in any order or state of panic:",
+        "prompt": "List everything you need to do, in any order:",
         "placeholder": "e.g. 3 assignments due Friday, need to reply to an email, and my room needs cleaning before my parents visit on Sunday",
         "button": "File declaration",
         "tone": False,

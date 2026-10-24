@@ -3,5 +3,5 @@
 {% block page_id %}case{% endblock %}
 {% block content %}
 <nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'home' %}">Front desk</a> &rsaquo; <a href="{% url 'files' %}">Case files</a> &rsaquo; {{ number }}</nav>
-<div id="out" aria-live="polite" data-case="{{ number }}"><div class="sheet">Retrieving the file. The clerk is walking there on foot.</div></div>
+<div id="out" aria-live="polite" data-case="{{ number }}"><div class="sheet">Fetching the file. The clerk is on foot.</div></div>
 {% endblock %}

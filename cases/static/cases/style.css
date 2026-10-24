@@ -216,3 +216,5 @@ textarea:disabled { background:#ece6d3; color:#555; }
 .docket-item h4 { margin:0 0 4px; font-size:1.02rem; }
 .docket-list { margin:0; padding-left:18px; }
 .docket-list li { margin:4px 0; }
+
+.demo-banner { max-width:860px; margin:0 auto 16px; padding:10px 16px; background:#fff7d6; border:1px solid var(--accent); font-size:.9rem; }
