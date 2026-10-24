@@ -200,6 +200,9 @@ The suite (244 tests) mocks Ollama, so it needs no model and runs in a couple of
 with whatever a model returns, including hostile or malformed output. It cannot prove how the real model behaves, so
 also try each office by hand on your machine after changing a prompt.
 
+GitHub Actions runs the same checks on every push and pull request (`.github/workflows/tests.yml`): lint, the Django
+system check, the full test suite, and `collectstatic` with production settings, which is the build step a host runs.
+
 | File | Covers |
 |---|---|
 | `test_core.py` | Ollama client, Pending and Correspondence validators, API basics |
@@ -236,6 +239,7 @@ does not work in demo mode.
 ## Project layout
 
 ```
+.github/workflows/       CI: lint, tests and the collectstatic build step on every push
 dua/                     Django project (settings, root URLs)
 cases/
   models.py              Case: department, status, statement, options, result

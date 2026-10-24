@@ -1,0 +1,39 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pyflakes
+
+      - name: Lint
+        run: python -m pyflakes cases dua manage.py
+
+      - name: Django system check
+        run: python manage.py check
+
+      - name: Tests (the model is mocked, no Ollama needed)
+        run: python manage.py test
+
+      - name: Deploy build step works (collectstatic with production settings)
+        env:
+          DJANGO_DEBUG: "false"
+          DJANGO_SECRET_KEY: ci-only-not-a-real-secret
+          DJANGO_ALLOWED_HOSTS: localhost
+          DEMO_MODE: "true"
+        run: python manage.py collectstatic --noinput

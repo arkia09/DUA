@@ -171,7 +171,7 @@
       }
       if (excuses[i]) {
         const q = el("blockquote", "excuse");
-        q.append(el("small", "", "Official excuse"),
+        q.append(el("small", "", "Official excuse (fictional; do not submit to your teacher)"),
                  document.createTextNode("“" + excuses[i] + "”"));
         box.append(q);
       }
