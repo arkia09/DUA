@@ -4,53 +4,33 @@
     "raw": {
       "top": [
         {
-          "title": "Dentist appointment",
-          "why": "It is a fixed appointment at a set time.",
-          "next_step": "Put it in your calendar with a reminder and check how long the trip takes.",
-          "quote": "Dentist Tuesday 3pm",
-          "deadline": "Tuesday 3pm"
-        },
-        {
-          "title": "Review Priya's slides",
-          "why": "Priya is waiting on your review and the notes give a Thursday deadline.",
-          "next_step": "Open the slides and skim them once, noting anything that needs a real fix.",
-          "quote": "Priya asked if I can review her slides by Thursday",
-          "deadline": "Thursday"
-        },
-        {
-          "title": "Get a gift for your mum",
-          "why": "Her birthday is on Saturday and you do not have a gift yet.",
-          "next_step": "Pick one gift idea and check whether it can arrive before Saturday.",
-          "quote": "Mum's birthday is on Saturday and I have no gift",
-          "deadline": "Saturday"
+          "title": "Dentist Appointment",
+          "why": "The dentist appointment is scheduled for Tuesday at 3pm.",
+          "next_step": "Confirm the appointment time.",
+          "deadline": null,
+          "quote": "Dentist Tuesday 3pm."
         }
       ],
       "can_wait": [
         {
-          "title": "Clear the inbox",
-          "why": "The notes give no deadline for it.",
-          "quote": "Should probably clear my inbox at some point",
-          "deadline": null
-        },
-        {
-          "title": "Repaint the shelf",
-          "why": "It is marked \"maybe\" and has no deadline.",
-          "quote": "Maybe repaint the shelf",
-          "deadline": null
+          "title": "Review Priya's Slides",
+          "why": "Reviewing the slides is requested by Thursday, allowing time for preparation.",
+          "deadline": "Thursday",
+          "quote": "Priya asked if I can review her slides by Thursday."
         }
       ],
       "heads_up": [
         {
-          "title": "Rent due",
-          "when": "the 1st",
-          "quote": "Landlord says the rent is due on the 1st"
+          "title": "Mum's Birthday",
+          "when": "Saturday",
+          "quote": "Mum's birthday is on Saturday and I have no gift."
         }
       ],
-      "one_liner": "Three things have fixed days this week: the dentist, Priya's slides and your mum's gift. Rent is due on the 1st.",
+      "one_liner": "One immediate event is scheduled, and several personal items can wait.",
       "clarifying_questions": [
-        "When does the gym membership expire?"
+        "What is the current date?"
       ],
-      "notice": "You have a dentist, a deadline and a birthday. The shelf has waited this long and will cope."
+      "notice": "The docket contains one fixed appointment and several low-priority domestic items."
     }
   },
   {
@@ -58,52 +38,49 @@
     "raw": {
       "top": [
         {
-          "title": "Call the bank about the blocked card",
-          "why": "The card is declined everywhere, so it is no use until it is unblocked.",
-          "next_step": "Find the number on the back of the card or in your banking app and call it.",
-          "quote": "Call the bank about the card they blocked, it is declined everywhere",
-          "deadline": null
-        },
-        {
-          "title": "Send the invoice to Daniel",
-          "why": "The notes give a deadline of the end of Friday.",
-          "next_step": "Open the invoice, check the amount and send it to Daniel.",
-          "quote": "Need to send the invoice to Daniel before end of day Friday",
-          "deadline": "before end of day Friday"
-        },
-        {
-          "title": "Standup at 10am",
-          "why": "The time has changed, so your usual plan for the morning may be off.",
-          "next_step": "Update your calendar to 10am.",
-          "quote": "Standup moved to 10am",
-          "deadline": "10am"
+          "title": "Call the bank about blocked card",
+          "why": "The card is declined everywhere.",
+          "next_step": "Call the bank.",
+          "deadline": null,
+          "quote": "Call the bank about the card they blocked, it is declined everywhere."
         }
       ],
       "can_wait": [
         {
+          "title": "Send invoice to Daniel",
+          "why": "The deadline for sending the invoice is Friday.",
+          "deadline": "end of day Friday",
+          "quote": "Need to send the invoice to Daniel before end of day Friday."
+        },
+        {
+          "title": "Water bill payment",
+          "why": "The water bill is due in two weeks.",
+          "deadline": "in two weeks",
+          "quote": "Water bill arrived, due in two weeks."
+        },
+        {
+          "title": "Trip planning discussion",
+          "why": "The trip discussion has no decided plans.",
+          "deadline": null,
+          "quote": "Someone in the group chat wants to plan a trip in March, nothing decided."
+        },
+        {
           "title": "Learn to juggle",
-          "why": "The notes give no deadline for it.",
-          "quote": "Learn to juggle",
-          "deadline": null
+          "why": "This item has no stated urgency.",
+          "deadline": null,
+          "quote": "Learn to juggle."
         }
       ],
       "heads_up": [
         {
-          "title": "Water bill",
-          "when": "due in two weeks",
-          "quote": "Water bill arrived, due in two weeks"
-        },
-        {
-          "title": "Group trip in March",
-          "when": "March",
-          "quote": "wants to plan a trip in March"
+          "title": "Standup meeting",
+          "when": "10am",
+          "quote": "Standup moved to 10am."
         }
       ],
-      "one_liner": "The blocked card and Friday's invoice need attention first. The water bill is due in two weeks.",
-      "clarifying_questions": [
-        "Which card pays the water bill?"
-      ],
-      "notice": "Your card is blocked, an invoice is due and the standup moved. Juggling is not on today's agenda."
+      "one_liner": "One immediate issue requires attention, and several other items can wait.",
+      "clarifying_questions": [],
+      "notice": "The day involves a meeting change and one immediate administrative task."
     }
   }
 ]

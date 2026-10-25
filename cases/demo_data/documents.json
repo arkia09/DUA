@@ -2,98 +2,87 @@
   {
     "text": "Notice of Fee Adjustment. Pursuant to Section 4(b) of the Residents' Agreement, the monthly service fee shall increase by 8% with effect from 1 March. Residents who wish to contest the adjustment must submit a written objection to the Estates Office no later than 14 February. Objections received after that date will not be considered. Payment of the adjusted fee is required regardless of any pending objection. The Estates Office may waive the adjustment in exceptional circumstances, as determined at its sole discretion.",
     "raw": {
-      "summary": "This is a notice that the monthly service fee for residents goes up by 8% from 1 March. If you want to contest the increase, you must send a written objection to the Estates Office by 14 February. You still have to pay the higher fee while an objection is pending. The Estates Office can waive the increase in exceptional circumstances, and it alone decides what counts.",
+      "summary": "This notice informs residents that their monthly service fee is going up by 8%. This change will start on March 1st. If a resident disagrees with this fee increase, they have a deadline to submit a formal written objection to the Estates Office. Even if an objection is filed, the new, higher fee must still be paid.",
       "key_points": [
-        "The monthly service fee increases by 8% from 1 March.",
-        "Objections must be in writing and reach the Estates Office by 14 February.",
-        "Objections received after that date will not be considered.",
-        "You must pay the new fee even while an objection is pending.",
-        "The Estates Office may waive the increase, at its own discretion."
+        "Monthly service fees will increase by 8%.",
+        "The fee increase takes effect on March 1st.",
+        "Residents can formally object to the fee change.",
+        "Objections must be submitted in writing to the Estates Office.",
+        "Payment of the adjusted fee is mandatory even if an objection is pending."
       ],
       "action_items": [
         {
-          "item": "Send a written objection to the Estates Office if you want to contest the increase",
-          "source_quote": "must submit a written objection to the Estates Office no later than 14 February"
+          "item": "Submit a written objection to the Estates Office if you wish to contest the fee adjustment.",
+          "source_quote": "Residents who wish to contest the adjustment must submit a written objection to the Estates Office no later than 14 February."
         }
       ],
       "deadlines": [
         {
-          "what": "Last day to submit a written objection",
+          "what": "Submitting a written objection",
           "when": "14 February",
-          "source_quote": "no later than 14 February"
+          "source_quote": "Residents who wish to contest the adjustment must submit a written objection to the Estates Office no later than 14 February."
         },
         {
-          "what": "The 8% fee increase takes effect",
+          "what": "Fee adjustment effect date",
           "when": "1 March",
-          "source_quote": "increase by 8% with effect from 1 March"
+          "source_quote": "the monthly service fee shall increase by 8% with effect from 1 March."
         }
       ],
       "requirements": [
         {
-          "item": "The adjusted fee must be paid even if an objection is pending",
-          "source_quote": "Payment of the adjusted fee is required regardless of any pending objection"
-        },
-        {
-          "item": "Late objections will not be considered",
-          "source_quote": "Objections received after that date will not be considered"
+          "item": "Payment of the adjusted fee is required regardless of any pending objection.",
+          "source_quote": "Payment of the adjusted fee is required regardless of any pending objection."
         }
       ],
       "unclear_or_missing": [
-        "The notice does not say what counts as \"exceptional circumstances\".",
-        "It does not say how to submit the objection, for example by post or email.",
-        "It does not give the new fee amount.",
-        "It does not say whether the higher fee is refunded if an objection succeeds."
+        "The specific amount of the monthly service fee is not provided.",
+        "The criteria for 'exceptional circumstances' are not detailed."
       ],
-      "complexity_label": "Moderately Stuffy",
-      "acknowledgment": "Document received. It contains the word \"Pursuant\", which has been noted."
+      "complexity_label": "Moderately Bureaucratic Preamble",
+      "acknowledgment": "The document has been received."
     }
   },
   {
     "text": "By continuing to use the Service you agree to these Terms. We may change the Terms at any time by posting an update, and your continued use means you accept the changes. You must be at least 16 years old to create an account. You must keep your password confidential. We may suspend your account if we believe, acting reasonably, that you have breached these Terms. Refunds for annual plans are available within 30 days of purchase. Unused credits expire after a period determined by us.",
     "raw": {
-      "summary": "These are terms of service. Using the service counts as agreeing to them, and the company can change them at any time by posting an update. You must be 16 or older, keep your password private, and can be suspended if the company reasonably believes you broke the terms. Annual plans can be refunded within 30 days of buying, and unused credits expire at a time the company chooses.",
+      "summary": "This document outlines the terms for using a service, stating that continued use implies agreement to these rules. The terms allow the service provider to change the rules whenever they want, and users must be at least 16 to sign up. It also specifies that refunds are available for annual plans within a certain timeframe and that accounts can be suspended for rule violations.",
       "key_points": [
-        "Using the service means you accept the terms.",
-        "The terms can change at any time, and continued use counts as accepting the change.",
-        "You must be at least 16 to create an account.",
-        "Annual plans have a 30-day refund window.",
-        "Unused credits expire, but the document does not say when."
+        "Continued use of the Service means agreeing to the Terms.",
+        "The Terms can be changed at any time by posting an update.",
+        "Users must be at least 16 years old to create an account.",
+        "Passwords must be kept confidential by the user.",
+        "Refunds for annual plans are available within 30 days of purchase.",
+        "Unused credits have an expiration period set by the provider."
       ],
       "action_items": [
         {
           "item": "Keep your password confidential",
-          "source_quote": "You must keep your password confidential"
+          "source_quote": "You must keep your password confidential."
         }
       ],
       "deadlines": [
         {
-          "what": "Refund window for annual plans",
+          "what": "Refunds for annual plans",
           "when": "within 30 days of purchase",
-          "source_quote": "Refunds for annual plans are available within 30 days of purchase"
+          "source_quote": "Refunds for annual plans are available within 30 days of purchase."
         }
       ],
       "requirements": [
         {
-          "item": "You accept the Terms by continuing to use the Service",
-          "source_quote": "By continuing to use the Service you agree to these Terms"
+          "item": "Be at least 16 years old to create an account",
+          "source_quote": "You must be at least 16 years old to create an account."
         },
         {
-          "item": "You must be at least 16 years old to create an account",
-          "source_quote": "You must be at least 16 years old to create an account"
-        },
-        {
-          "item": "Your account can be suspended if the company reasonably believes you breached the Terms",
-          "source_quote": "We may suspend your account if we believe, acting reasonably, that you have breached these Terms"
+          "item": "Accept changes to the Terms by continuing to use the Service",
+          "source_quote": "your continued use means you accept the changes."
         }
       ],
       "unclear_or_missing": [
-        "The document does not say when unused credits expire.",
-        "It does not say how you would be told about changes to the Terms.",
-        "It does not say how to ask for a refund.",
-        "\"Acting reasonably\" is not defined, so it is unclear when a suspension is justified."
+        "The specific period after which unused credits expire is not defined.",
+        "The conditions under which an account will be suspended are only described as a belief of a breach."
       ],
-      "complexity_label": "Standard Small Print",
-      "acknowledgment": "Terms received. Reading them already puts you ahead of most people."
+      "complexity_label": "Procedurally Dense Compliance",
+      "acknowledgment": "Document received."
     }
   }
 ]

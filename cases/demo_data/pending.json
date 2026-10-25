@@ -4,71 +4,73 @@
     "raw": {
       "tasks": [
         {
-          "title": "Assignment",
-          "urgency": "critical",
+          "title": "Assignment due Friday",
+          "urgency": "high",
           "verdict": "do_now",
-          "reason": "It has a stated deadline of Friday and is probably the biggest task on the list, so slipping costs the most.",
+          "reason": "The submission date is specified, meaning delay risks non-submission.",
           "deadline": "Friday",
           "depends_on": [],
-          "next_step": "Open the assignment and write down what is still missing.",
-          "minimum_effort": "Submit a complete, passable version.",
-          "excuse": "A seagull took the only copy of the instructions.",
+          "next_step": "Open the assignment document and review the requirements.",
+          "minimum_effort": "Submit the assignment.",
+          "excuse": "The cosmic alignment required a moment of intense spreadsheet contemplation.",
           "permit_clause": ""
         },
         {
           "title": "Reply to Priya's email",
           "urgency": "medium",
           "verdict": "schedule",
-          "reason": "A short reply clears one open item. No deadline was stated.",
+          "reason": "Responding to correspondence implies a necessary interaction, but no immediate crisis is stated.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "Write a two-line reply and send it.",
-          "minimum_effort": "Send a short answer, or a date you will answer by.",
-          "excuse": "The email is stuck behind a very polite pigeon.",
-          "permit_clause": ""
-        },
-        {
-          "title": "Water the plant",
-          "urgency": "low",
-          "verdict": "schedule",
-          "reason": "It takes a minute and a plant cannot wait forever. No deadline was stated.",
-          "deadline": null,
-          "depends_on": [],
-          "next_step": "Fill a glass and water it.",
-          "minimum_effort": "Give it one glass of water and move on.",
-          "excuse": "The plant says it is fine. The plant is lying.",
+          "next_step": "Open the email client and locate Priya's message.",
+          "minimum_effort": "Send a brief acknowledgment.",
+          "excuse": "A localized temporal eddy prevented the finger from striking the correct keys.",
           "permit_clause": ""
         },
         {
           "title": "Reorganise my bookmarks",
           "urgency": "low",
           "verdict": "defer",
-          "reason": "No deadline, and nothing else on the list depends on it.",
+          "reason": "This is a purely organizational task with no stated consequence for delay.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "If you start, set a ten-minute timer.",
-          "minimum_effort": "Delete the ten bookmarks you recognise least.",
-          "excuse": "The bookmarks are in a union dispute.",
-          "permit_clause": "someone asks where a bookmark went"
+          "next_step": "Open the browser bookmarks manager.",
+          "minimum_effort": "Group existing bookmarks into logical folders.",
+          "excuse": "The local gravity fluctuated, making precise categorization impossible.",
+          "permit_clause": "you mention the word 'taxonomy' in a tone of mild exasperation"
         },
         {
-          "title": "Learn guitar",
-          "urgency": "low",
-          "verdict": "deny",
-          "reason": "You wrote \"maybe\" and \"someday\", so there is no plan and no deadline.",
+          "title": "Water the plant",
+          "urgency": "medium",
+          "verdict": "do_now",
+          "reason": "Plant health is a matter of immediate upkeep, and allowing it to dry out is poor stewardship.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "Write \"guitar\" on a someday list.",
-          "minimum_effort": "Nothing needed. It can stay an idea.",
-          "excuse": "Every guitar in the area is on strike.",
-          "permit_clause": "someone hands you a guitar"
+          "next_step": "Locate the watering can or appropriate vessel.",
+          "minimum_effort": "Apply water to the plant's soil.",
+          "excuse": "The plant was currently engaged in a philosophical debate regarding the nature of hydration.",
+          "permit_clause": ""
+        },
+        {
+          "title": "Learn guitar someday",
+          "urgency": "low",
+          "verdict": "deny",
+          "reason": "The timeframe 'someday' indicates no immediate requirement, and it is purely optional.",
+          "deadline": null,
+          "depends_on": [],
+          "next_step": "Do nothing related to the guitar.",
+          "minimum_effort": "Acknowledge the desire and cease further thought.",
+          "excuse": "The instrument currently requires an audience of certified sonic archivists.",
+          "permit_clause": "you attempt to tune the instrument without prior consultation"
         }
       ],
-      "smallest_next_action": "Open the assignment and list what is still missing.",
+      "smallest_next_action": "Open the assignment document and review the requirements.",
       "clarifying_questions": [
-        "How long is the assignment, and how much of it is done?"
+        "What is the submission method for the assignment?",
+        "What is the context of Priya's email?",
+        "Does the plant require a specific amount of water?"
       ],
-      "official_notice": "One assignment is due Friday. The guitar has waited this long."
+      "official_notice": "The Bureau requires maximum efficiency, though we suspect your current efficiency is statistically negligible."
     }
   },
   {
@@ -79,56 +81,58 @@
           "title": "Pay the electricity bill",
           "urgency": "high",
           "verdict": "do_now",
-          "reason": "It is money owed with a stated date of the 25th, so it ranks first.",
-          "deadline": "by the 25th",
+          "reason": "Not paying could result in service interruption, which is a tangible negative outcome.",
+          "deadline": "the 25th",
           "depends_on": [],
-          "next_step": "Log in to your electricity account and open the bill.",
-          "minimum_effort": "Pay the full amount online and skip filing the receipt.",
-          "excuse": "The bill was delivered to a lighthouse.",
+          "next_step": "Locate the current electricity bill statement.",
+          "minimum_effort": "Submit payment online and retain confirmation.",
+          "excuse": "A minor bureaucratic anomaly prevented the necessary routing of the payment slip.",
           "permit_clause": ""
         },
         {
           "title": "Book a dentist appointment",
           "urgency": "medium",
           "verdict": "schedule",
-          "reason": "It is about your health and has no stated date, so book it soon but after the bill.",
+          "reason": "Dental care is important for health, but no immediate crisis is stated, allowing for scheduling.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "Find the dentist's number or online booking page.",
-          "minimum_effort": "Book any slot in the next few weeks.",
-          "excuse": "The dentist's phone number is hiding behind the couch.",
+          "next_step": "Search local dentist office websites for available appointment slots.",
+          "minimum_effort": "Call one dental office to inquire about availability.",
+          "excuse": "The local dental chair was temporarily occupied by a migrating dust bunny.",
           "permit_clause": ""
         },
         {
           "title": "Call grandma",
           "urgency": "medium",
           "verdict": "schedule",
-          "reason": "A short call is easy to put off, and no deadline was stated.",
+          "reason": "Contacting family is beneficial, but its urgency is not defined by a stated consequence.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "Text her to ask when she is free for a call.",
-          "minimum_effort": "Make a five-minute call.",
-          "excuse": "Grandma's phone is, by tradition, in another room.",
+          "next_step": "Find grandma's current contact number.",
+          "minimum_effort": "Place a brief call to check in.",
+          "excuse": "The cosmic alignment required the phone to be momentarily tuned to a different frequency.",
           "permit_clause": ""
         },
         {
           "title": "Clear 400 unread newsletters",
           "urgency": "low",
-          "verdict": "defer",
-          "reason": "No deadline, and nothing in the list depends on it.",
+          "verdict": "deny",
+          "reason": "The stated stakes of reading or deleting newsletters are unknown and appear low.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "Search for \"unsubscribe\" and bulk-delete what you find.",
-          "minimum_effort": "Select everything and mark it as read.",
-          "excuse": "The newsletters multiply when nobody is looking.",
-          "permit_clause": "the newsletters reach 500"
+          "next_step": "Ignore the inbox and close the email application.",
+          "minimum_effort": "Take no action on the newsletters.",
+          "excuse": "The sheer volume of unsolicited digital correspondence caused a localized temporal warp.",
+          "permit_clause": "you mention the number 400 in a context suggesting personal importance"
         }
       ],
-      "smallest_next_action": "Open the electricity bill and pay it.",
+      "smallest_next_action": "Locate the current electricity bill statement.",
       "clarifying_questions": [
-        "Is there a date you need the dentist appointment by?"
+        "Is there a specific date or penalty associated with the electricity bill if it is paid late?",
+        "Are there any known health concerns that dictate the urgency of the dentist appointment?",
+        "Does grandma have a preferred time or day for calls?"
       ],
-      "official_notice": "One bill has a deadline. The newsletters do not."
+      "official_notice": "The Bureau finds your list suitably disorganized. Proceed with the tasks in the order presented above, or face bureaucratic entropy."
     }
   }
 ]
