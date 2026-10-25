@@ -4,73 +4,73 @@
     "raw": {
       "tasks": [
         {
-          "title": "Assignment due Friday",
+          "title": "Assignment",
           "urgency": "high",
           "verdict": "do_now",
-          "reason": "The submission date is specified, meaning delay risks non-submission.",
+          "reason": "The assignment has a stated due date, which suggests immediate attention is required.",
           "deadline": "Friday",
           "depends_on": [],
-          "next_step": "Open the assignment document and review the requirements.",
-          "minimum_effort": "Submit the assignment.",
-          "excuse": "The cosmic alignment required a moment of intense spreadsheet contemplation.",
+          "next_step": "Open the assignment document and review the required scope.",
+          "minimum_effort": "Review assignment requirements and begin drafting the introduction.",
+          "excuse": "The structural integrity of my preferred writing utensil suffered a minor existential crisis.",
           "permit_clause": ""
         },
         {
           "title": "Reply to Priya's email",
           "urgency": "medium",
           "verdict": "schedule",
-          "reason": "Responding to correspondence implies a necessary interaction, but no immediate crisis is stated.",
+          "reason": "Responding to correspondence is generally important for maintaining procedural continuity.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "Open the email client and locate Priya's message.",
-          "minimum_effort": "Send a brief acknowledgment.",
-          "excuse": "A localized temporal eddy prevented the finger from striking the correct keys.",
+          "next_step": "Open your email client and locate the message from Priya.",
+          "minimum_effort": "Compose a brief acknowledgement of receipt.",
+          "excuse": "A rogue dust mote briefly occupied the primary processing core of my communication system.",
           "permit_clause": ""
         },
         {
-          "title": "Reorganise my bookmarks",
+          "title": "Reorganise bookmarks",
           "urgency": "low",
           "verdict": "defer",
-          "reason": "This is a purely organizational task with no stated consequence for delay.",
+          "reason": "This task involves personal organization and has no stated critical implications.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "Open the browser bookmarks manager.",
-          "minimum_effort": "Group existing bookmarks into logical folders.",
-          "excuse": "The local gravity fluctuated, making precise categorization impossible.",
-          "permit_clause": "you mention the word 'taxonomy' in a tone of mild exasperation"
+          "next_step": "Open your browser's bookmark manager.",
+          "minimum_effort": "Group existing bookmarks into three logical categories.",
+          "excuse": "The current arrangement of digital shortcuts was briefly influenced by a passing thought regarding ancient cartography.",
+          "permit_clause": "you mention the concept of 'optimal digital topology' in a declarative tone"
         },
         {
           "title": "Water the plant",
           "urgency": "medium",
           "verdict": "do_now",
-          "reason": "Plant health is a matter of immediate upkeep, and allowing it to dry out is poor stewardship.",
+          "reason": "Plant hydration is a biological necessity, and allowing dehydration to proceed is unwise.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "Locate the watering can or appropriate vessel.",
-          "minimum_effort": "Apply water to the plant's soil.",
-          "excuse": "The plant was currently engaged in a philosophical debate regarding the nature of hydration.",
+          "next_step": "Locate the designated watering can or vessel.",
+          "minimum_effort": "Apply water to the soil surface until moisture is apparent.",
+          "excuse": "The plant momentarily attempted to file an appeal against the current atmospheric humidity levels.",
           "permit_clause": ""
         },
         {
           "title": "Learn guitar someday",
           "urgency": "low",
           "verdict": "deny",
-          "reason": "The timeframe 'someday' indicates no immediate requirement, and it is purely optional.",
+          "reason": "This is a long-term, aspirational activity with no immediate procedural weight.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "Do nothing related to the guitar.",
-          "minimum_effort": "Acknowledge the desire and cease further thought.",
-          "excuse": "The instrument currently requires an audience of certified sonic archivists.",
-          "permit_clause": "you attempt to tune the instrument without prior consultation"
+          "next_step": "Close the guitar instruction website.",
+          "minimum_effort": "Acknowledge the desire to learn guitar, then dismiss the thought.",
+          "excuse": "The universe temporarily redirected my focus toward the subtle nuances of bureaucratic stamp placement.",
+          "permit_clause": "you demonstrate proficiency in a minor chord progression while citing Section 4B of the Bureau Handbook"
         }
       ],
-      "smallest_next_action": "Open the assignment document and review the requirements.",
+      "smallest_next_action": "Open the assignment document and review the required scope.",
       "clarifying_questions": [
-        "What is the submission method for the assignment?",
-        "What is the context of Priya's email?",
-        "Does the plant require a specific amount of water?"
+        "What is the scope or required length of the assignment?",
+        "Is there a specific recipient or context for Priya's email?",
+        "Is the plant currently showing any visible signs of distress?"
       ],
-      "official_notice": "The Bureau requires maximum efficiency, though we suspect your current efficiency is statistically negligible."
+      "official_notice": "We have processed your list of sundry obligations. Please note that the Bureau of Pending Affairs views the successful avoidance of these duties as a form of advanced administrative achievement. We trust this structured prioritization meets your current existential needs."
     }
   },
   {
@@ -81,58 +81,58 @@
           "title": "Pay the electricity bill",
           "urgency": "high",
           "verdict": "do_now",
-          "reason": "Not paying could result in service interruption, which is a tangible negative outcome.",
-          "deadline": "the 25th",
+          "reason": "Failure to pay could result in service interruption, which is a tangible consequence.",
+          "deadline": "by the 25th",
           "depends_on": [],
           "next_step": "Locate the current electricity bill statement.",
-          "minimum_effort": "Submit payment online and retain confirmation.",
-          "excuse": "A minor bureaucratic anomaly prevented the necessary routing of the payment slip.",
+          "minimum_effort": "Submit payment online",
+          "excuse": "The local meteorological committee declared a temporary suspension of financial processing due to excessive atmospheric particulate matter.",
           "permit_clause": ""
         },
         {
           "title": "Book a dentist appointment",
           "urgency": "medium",
           "verdict": "schedule",
-          "reason": "Dental care is important for health, but no immediate crisis is stated, allowing for scheduling.",
+          "reason": "Dental health is a personal matter that requires proactive scheduling, but immediate crisis indicators are absent.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "Search local dentist office websites for available appointment slots.",
-          "minimum_effort": "Call one dental office to inquire about availability.",
-          "excuse": "The local dental chair was temporarily occupied by a migrating dust bunny.",
+          "next_step": "Search for local dental office contact information.",
+          "minimum_effort": "Call a dentist to check availability",
+          "excuse": "A minor temporal anomaly caused the applicant's calendar interface to briefly reject all incoming scheduling requests.",
           "permit_clause": ""
         },
         {
           "title": "Call grandma",
           "urgency": "medium",
           "verdict": "schedule",
-          "reason": "Contacting family is beneficial, but its urgency is not defined by a stated consequence.",
+          "reason": "Maintaining familial contact is generally beneficial, though no specific time constraint was provided.",
           "deadline": null,
           "depends_on": [],
           "next_step": "Find grandma's current contact number.",
-          "minimum_effort": "Place a brief call to check in.",
-          "excuse": "The cosmic alignment required the phone to be momentarily tuned to a different frequency.",
+          "minimum_effort": "Initiate a brief phone call",
+          "excuse": "The gravitational pull exerted by a nearby, undiscovered moon temporarily interfered with the applicant's vocal cord resonance.",
           "permit_clause": ""
         },
         {
           "title": "Clear 400 unread newsletters",
           "urgency": "low",
-          "verdict": "deny",
-          "reason": "The stated stakes of reading or deleting newsletters are unknown and appear low.",
+          "verdict": "defer",
+          "reason": "This task is purely administrative and has no stated consequence if postponed.",
           "deadline": null,
           "depends_on": [],
-          "next_step": "Ignore the inbox and close the email application.",
-          "minimum_effort": "Take no action on the newsletters.",
-          "excuse": "The sheer volume of unsolicited digital correspondence caused a localized temporal warp.",
-          "permit_clause": "you mention the number 400 in a context suggesting personal importance"
+          "next_step": "Access the primary email inbox.",
+          "minimum_effort": "Archive or delete the oldest 50 newsletters",
+          "excuse": "The collective spirit of the newsprint has manifested as a temporary, overwhelming urge to re-read every archived document from the 1980s.",
+          "permit_clause": "you mention the volume of newsletters in a tone of mild exasperation"
         }
       ],
       "smallest_next_action": "Locate the current electricity bill statement.",
       "clarifying_questions": [
-        "Is there a specific date or penalty associated with the electricity bill if it is paid late?",
-        "Are there any known health concerns that dictate the urgency of the dentist appointment?",
-        "Does grandma have a preferred time or day for calls?"
+        "What is the current due date for the electricity bill?",
+        "Is there a preference for the type of dentist (e.g., general, specialist)?",
+        "Is there a preferred time window for calling grandma?"
       ],
-      "official_notice": "The Bureau finds your list suitably disorganized. Proceed with the tasks in the order presented above, or face bureaucratic entropy."
+      "official_notice": "Pursuant to Bureau Statute 404-B, we find your submitted docket to be a collection of disparate administrative obligations. Please be advised that excessive task proliferation may result in bureaucratic entropy, which we are ill-equipped to manage."
     }
   }
 ]

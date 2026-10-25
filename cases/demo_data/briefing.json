@@ -6,7 +6,7 @@
         {
           "title": "Dentist Appointment",
           "why": "The dentist appointment is scheduled for Tuesday at 3pm.",
-          "next_step": "Confirm the appointment time.",
+          "next_step": "Confirm the dentist appointment time.",
           "deadline": null,
           "quote": "Dentist Tuesday 3pm."
         }
@@ -14,9 +14,27 @@
       "can_wait": [
         {
           "title": "Review Priya's Slides",
-          "why": "Reviewing the slides is requested by Thursday, allowing time for preparation.",
+          "why": "Reviewing the slides does not have an immediate deadline.",
           "deadline": "Thursday",
           "quote": "Priya asked if I can review her slides by Thursday."
+        },
+        {
+          "title": "Repaint Shelf",
+          "why": "Repainting the shelf is a non-urgent personal task.",
+          "deadline": null,
+          "quote": "Maybe repaint the shelf."
+        },
+        {
+          "title": "Clear Inbox",
+          "why": "Clearing the inbox is a general maintenance task without stated urgency.",
+          "deadline": null,
+          "quote": "Should probably clear my inbox at some point."
+        },
+        {
+          "title": "Gym Membership Renewal",
+          "why": "The expiration date for the gym membership is unknown.",
+          "deadline": null,
+          "quote": "Gym membership renewal email, no idea when it expires."
         }
       ],
       "heads_up": [
@@ -26,11 +44,12 @@
           "quote": "Mum's birthday is on Saturday and I have no gift."
         }
       ],
-      "one_liner": "One immediate event is scheduled, and several personal items can wait.",
+      "one_liner": "One item requires immediate attention, while several other matters may await a later consideration.",
       "clarifying_questions": [
-        "What is the current date?"
+        "What is the exact date of the rent being due?",
+        "Is there a specific date for the gym membership renewal?"
       ],
-      "notice": "The docket contains one fixed appointment and several low-priority domestic items."
+      "notice": "Be apprised that this docket presents a singular point of immediate scheduling requirement. The remainder of the day's obligations are categorized for subsequent deliberation."
     }
   },
   {
@@ -38,49 +57,37 @@
     "raw": {
       "top": [
         {
-          "title": "Call the bank about blocked card",
+          "title": "Call the bank",
           "why": "The card is declined everywhere.",
-          "next_step": "Call the bank.",
+          "next_step": "Call the bank about the card they blocked.",
           "deadline": null,
           "quote": "Call the bank about the card they blocked, it is declined everywhere."
         }
       ],
       "can_wait": [
         {
-          "title": "Send invoice to Daniel",
-          "why": "The deadline for sending the invoice is Friday.",
-          "deadline": "end of day Friday",
-          "quote": "Need to send the invoice to Daniel before end of day Friday."
-        },
-        {
           "title": "Water bill payment",
-          "why": "The water bill is due in two weeks.",
+          "why": "The payment is not due until two weeks from now.",
           "deadline": "in two weeks",
           "quote": "Water bill arrived, due in two weeks."
         },
         {
-          "title": "Trip planning discussion",
-          "why": "The trip discussion has no decided plans.",
+          "title": "Trip planning",
+          "why": "No decisions have been made regarding the March trip.",
           "deadline": null,
           "quote": "Someone in the group chat wants to plan a trip in March, nothing decided."
-        },
-        {
-          "title": "Learn to juggle",
-          "why": "This item has no stated urgency.",
-          "deadline": null,
-          "quote": "Learn to juggle."
         }
       ],
       "heads_up": [
         {
-          "title": "Standup meeting",
-          "when": "10am",
-          "quote": "Standup moved to 10am."
+          "title": "Invoice submission",
+          "when": "end of day Friday",
+          "quote": "Need to send the invoice to Daniel before end of day Friday."
         }
       ],
-      "one_liner": "One immediate issue requires attention, and several other items can wait.",
+      "one_liner": "One critical item requires immediate attention, with other items scheduled for later review.",
       "clarifying_questions": [],
-      "notice": "The day involves a meeting change and one immediate administrative task."
+      "notice": "The docket presents a singular matter of immediate financial concern, alongside several items requiring future disposition."
     }
   }
 ]

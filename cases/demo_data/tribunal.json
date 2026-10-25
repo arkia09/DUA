@@ -5,44 +5,57 @@
     "raw": {
       "options": [
         {
-          "name": "Pizza Delivery",
+          "name": "Standard Pizza Delivery",
           "pros": [
-            "It is quick.",
-            "It is cheap."
+            "It is a readily available option.",
+            "It can generally be quick."
           ],
           "cons": [
-            "It may require washing dishes depending on the order."
+            "It may not be the cheapest option.",
+            "It often requires dishwashing."
           ]
         },
         {
-          "name": "Sushi Takeout",
+          "name": "Takeout Sushi Order",
           "pros": [
-            "It is quick.",
-            "It is cheap."
+            "It avoids the need to wash dishes.",
+            "It can be quick to receive."
           ],
           "cons": [
-            "It may require washing dishes depending on the order."
+            "It might not be the cheapest option.",
+            "It is a specific type of food."
+          ]
+        },
+        {
+          "name": "Frozen Pizza",
+          "pros": [
+            "It is typically cheap.",
+            "It requires minimal cleanup."
+          ],
+          "cons": [
+            "It may not be as quick as delivery.",
+            "It is not a fresh meal."
           ]
         }
       ],
-      "recommended_option": "Pizza Delivery",
-      "reasoning": "The recommendation favors Pizza Delivery because it aligns with the stated preference for being quick and cheap. Both options meet those criteria, but the choice is made provisionally as the dishwashing constraint was not fully resolved by the stated facts.",
+      "recommended_option": "Frozen Pizza",
+      "reasoning": "The recommendation prioritizes the stated desire to be cheap and not want to wash dishes. While takeout sushi avoids dishes, the frozen pizza option satisfies the cost and cleanup constraints most directly. This provisional recommendation is based on general considerations as the speed of the options was not prioritized.",
       "preferences_used": [
         "cheap",
         "quick",
         "I do not want to wash dishes"
       ],
       "clarifying_questions": [
-        "Does the pizza or sushi order guarantee minimal dishwashing?",
-        "What is the acceptable threshold for 'cheap'?",
-        "How 'quick' is acceptable for your timeframe?"
+        "How important is the speed of the meal?",
+        "Does the definition of 'cheap' refer to the lowest possible cost or a budget constraint?",
+        "Are you willing to tolerate minor dishwashing for a perceived improvement in meal quality?"
       ],
       "serious_topic": false,
-      "case_title": "The Applicant v. Dinner Choices",
-      "findings": "The applicant seeks resolution between pizza and sushi.",
-      "verdict": "The court finds in favor of Pizza Delivery.",
-      "sentence": "You must contemplate the structural integrity of crust vs. rice.",
-      "appeal_procedure": "Appeals must be filed on triplicate parchment delivered before the next Tuesday."
+      "case_title": "The Applicant v. Culinary Contemplation",
+      "findings": "The Applicant stands at a nexus of two culinary possibilities, one being substantial and the other being delicate. The core conflict revolves around cost, expediency, and post-consumption sanitation.",
+      "verdict": "The Court hereby rules in favor of Frozen Pizza.",
+      "sentence": "The Applicant must contemplate the structural integrity of all future food choices.",
+      "appeal_procedure": "Any appeal must be filed in triplicate, sealed with wax, and submitted to this presiding judge before the next Tuesday's docket."
     }
   },
   {
@@ -51,39 +64,39 @@
     "raw": {
       "options": [
         {
-          "name": "Reply Immediately",
+          "name": "Reply Now",
           "pros": [
-            "You address the matter right away."
+            "Resolves the immediate communication need."
           ],
           "cons": [
-            "You will expend energy when you are tired."
+            "Requires immediate mental energy when you are tired."
           ]
         },
         {
           "name": "Reply Tomorrow Morning",
           "pros": [
-            "You can wait until you are more rested."
+            "Allows time to rest before engaging."
           ],
           "cons": [
-            "The matter will be left unaddressed until the next day."
+            "Delays the response to the group chat."
           ]
         }
       ],
       "recommended_option": "Reply Tomorrow Morning",
-      "reasoning": "Your stated preference is that you are tired and the topic is not urgent. Choosing to reply tomorrow morning aligns with resting when you are tired and delaying action on a non-urgent topic.",
+      "reasoning": "The applicant stated they are tired, which favors delaying the response. Furthermore, the applicant noted that the topic is not urgent, which supports waiting until tomorrow morning. This combination suggests prioritizing rest over immediate engagement.",
       "preferences_used": [
         "I am tired and the topic is not urgent"
       ],
       "clarifying_questions": [
-        "How urgent is 'not urgent' in this context?",
-        "What time tomorrow morning would be most suitable for you?"
+        "What time does 'tomorrow morning' typically mean for you?",
+        "How critical is the group chat for your daily function?"
       ],
       "serious_topic": false,
-      "case_title": "The Applicant v. Inbox Procrastination",
-      "findings": "The Applicant is fatigued, and the subject matter lacks immediate necessity.",
-      "verdict": "The Court rules in favor of Reply Tomorrow Morning.",
-      "sentence": "You must draft the reply in a font size no smaller than 12 point.",
-      "appeal_procedure": "An appeal must be lodged in triplicate before the next quarterly review."
+      "case_title": "The Applicant v. Digital Obligation",
+      "findings": "The Tribunal has reviewed the conflicting desires presented by the Applicant regarding immediate versus deferred communication. The facts demonstrate a state of fatigue coupled with a lack of temporal urgency regarding the subject matter.",
+      "verdict": "The Court finds in favor of the deferral, thus recommending the 'Reply Tomorrow Morning' option.",
+      "sentence": "The Applicant is hereby mandated to observe a brief period of digital silence.",
+      "appeal_procedure": "Should the Applicant disagree with this ruling, a petition may be filed for review before this very bench within one solar cycle."
     }
   },
   {
@@ -93,36 +106,35 @@
         {
           "name": "Bus Transit",
           "pros": [
-            "It is an option available to you.",
-            "It removes the need for walking."
+            "It requires no physical exertion on your part."
           ],
           "cons": [
-            "It requires waiting for the bus."
+            "It involves reliance on a public schedule."
           ]
         },
         {
           "name": "Walking Route",
           "pros": [
-            "It is an option available to you."
+            "It requires no reliance on a public schedule."
           ],
           "cons": [
-            "It requires you to walk to the library."
+            "It requires physical exertion on your part."
           ]
         }
       ],
       "recommended_option": "Bus Transit",
-      "reasoning": "This is a provisional recommendation based on general considerations. Since no preferences were stated, the choice defaults to the option that removes the physical exertion of walking.",
+      "reasoning": "This is a provisional recommendation based on general considerations as no specific preferences were provided. The selection between the two options remains arbitrary without further input. The decision rests solely on the immediate circumstances of the traveler.",
       "preferences_used": [],
       "clarifying_questions": [
-        "What is more important to you: speed or physical activity?",
+        "What is your priority between minimizing physical exertion and minimizing schedule dependence?",
         "How far is the library from your current location?"
       ],
       "serious_topic": false,
-      "case_title": "The Applicant v. The Pavement",
-      "findings": "The matter is a simple choice between mechanized transport and ambulatory effort.",
-      "verdict": "The court mandates the adoption of the Bus Transit option.",
-      "sentence": "You must hum the municipal transit jingle while walking to the stop.",
-      "appeal_procedure": "An appeal must be filed in triplicate before this bench."
+      "case_title": "The Applicant v. Locomotion",
+      "findings": "The Applicant stands at a juncture between two modes of transit. One option involves public conveyance, while the other involves self-propelled movement.",
+      "verdict": "The Court hereby decrees that the Bus Transit shall be the chosen course of action.",
+      "sentence": "The Applicant must document the exact time of their departure for future reference.",
+      "appeal_procedure": "Any objection to this ruling must be submitted in triplicate to the Clerk of the Tribunal within one solar cycle."
     }
   }
 ]

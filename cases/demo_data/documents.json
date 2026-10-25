@@ -2,17 +2,17 @@
   {
     "text": "Notice of Fee Adjustment. Pursuant to Section 4(b) of the Residents' Agreement, the monthly service fee shall increase by 8% with effect from 1 March. Residents who wish to contest the adjustment must submit a written objection to the Estates Office no later than 14 February. Objections received after that date will not be considered. Payment of the adjusted fee is required regardless of any pending objection. The Estates Office may waive the adjustment in exceptional circumstances, as determined at its sole discretion.",
     "raw": {
-      "summary": "This notice informs residents that their monthly service fee is going up by 8%. This change will start on March 1st. If a resident disagrees with this fee increase, they have a deadline to submit a formal written objection to the Estates Office. Even if an objection is filed, the new, higher fee must still be paid.",
+      "summary": "This notice informs residents that the monthly service fee will be increasing by 8%. This change will take effect starting March 1st. If a resident disagrees with this fee increase, they must submit a formal written objection to the Estates Office by a specific deadline. Even if an objection is submitted, the new, higher fee must still be paid.",
       "key_points": [
-        "Monthly service fees will increase by 8%.",
-        "The fee increase takes effect on March 1st.",
-        "Residents can formally object to the fee change.",
-        "Objections must be submitted in writing to the Estates Office.",
-        "Payment of the adjusted fee is mandatory even if an objection is pending."
+        "The monthly service fee is increasing by 8%.",
+        "The fee increase becomes active on March 1st.",
+        "A written objection is required to contest the change.",
+        "Objections must be submitted before a specific cutoff date.",
+        "Payment of the increased fee is mandatory regardless of objections."
       ],
       "action_items": [
         {
-          "item": "Submit a written objection to the Estates Office if you wish to contest the fee adjustment.",
+          "item": "Submit a written objection to the Estates Office",
           "source_quote": "Residents who wish to contest the adjustment must submit a written objection to the Estates Office no later than 14 February."
         }
       ],
@@ -21,68 +21,66 @@
           "what": "Submitting a written objection",
           "when": "14 February",
           "source_quote": "Residents who wish to contest the adjustment must submit a written objection to the Estates Office no later than 14 February."
-        },
-        {
-          "what": "Fee adjustment effect date",
-          "when": "1 March",
-          "source_quote": "the monthly service fee shall increase by 8% with effect from 1 March."
         }
       ],
       "requirements": [
         {
-          "item": "Payment of the adjusted fee is required regardless of any pending objection.",
+          "item": "Submit a written objection to contest the adjustment",
+          "source_quote": "Residents who wish to contest the adjustment must submit a written objection to the Estates Office no later than 14 February."
+        },
+        {
+          "item": "Payment of the adjusted fee is required",
           "source_quote": "Payment of the adjusted fee is required regardless of any pending objection."
         }
       ],
       "unclear_or_missing": [
-        "The specific amount of the monthly service fee is not provided.",
-        "The criteria for 'exceptional circumstances' are not detailed."
+        "The exact amount of the current monthly service fee is not provided.",
+        "The criteria for 'exceptional circumstances' for a fee waiver are not detailed."
       ],
-      "complexity_label": "Moderately Bureaucratic Preamble",
-      "acknowledgment": "The document has been received."
+      "complexity_label": "Moderately Bureaucratic Formalism",
+      "acknowledgment": "This document has been processed and its existence is hereby noted. The contents herein have been duly registered for analysis."
     }
   },
   {
     "text": "By continuing to use the Service you agree to these Terms. We may change the Terms at any time by posting an update, and your continued use means you accept the changes. You must be at least 16 years old to create an account. You must keep your password confidential. We may suspend your account if we believe, acting reasonably, that you have breached these Terms. Refunds for annual plans are available within 30 days of purchase. Unused credits expire after a period determined by us.",
     "raw": {
-      "summary": "This document outlines the terms for using a service, stating that continued use implies agreement to these rules. The terms allow the service provider to change the rules whenever they want, and users must be at least 16 to sign up. It also specifies that refunds are available for annual plans within a certain timeframe and that accounts can be suspended for rule violations.",
+      "summary": "This document outlines the terms and conditions for using a specific Service. By continuing to use the Service, the reader is agreeing to these rules, which can change over time. Key requirements include being at least 16 years old to register and keeping passwords secret. The document also mentions conditions for refunds and the expiration of unused credits.",
       "key_points": [
-        "Continued use of the Service means agreeing to the Terms.",
-        "The Terms can be changed at any time by posting an update.",
-        "Users must be at least 16 years old to create an account.",
-        "Passwords must be kept confidential by the user.",
-        "Refunds for annual plans are available within 30 days of purchase.",
-        "Unused credits have an expiration period set by the provider."
+        "Continued use of the Service signifies agreement to these Terms.",
+        "The Terms may be updated at any time, and continued use implies acceptance of changes.",
+        "Users must be 16 years of age or older to create an account.",
+        "Account suspension is possible if the Terms are breached.",
+        "Refunds for annual plans are available within a specific timeframe."
       ],
       "action_items": [
         {
-          "item": "Keep your password confidential",
-          "source_quote": "You must keep your password confidential."
+          "item": "Accept the Terms by continuing to use the Service.",
+          "source_quote": "By continuing to use the Service you agree to these Terms."
         }
       ],
       "deadlines": [
         {
           "what": "Refunds for annual plans",
-          "when": "within 30 days of purchase",
+          "when": "30 days of purchase",
           "source_quote": "Refunds for annual plans are available within 30 days of purchase."
         }
       ],
       "requirements": [
         {
-          "item": "Be at least 16 years old to create an account",
+          "item": "Be at least 16 years old to create an account.",
           "source_quote": "You must be at least 16 years old to create an account."
         },
         {
-          "item": "Accept changes to the Terms by continuing to use the Service",
-          "source_quote": "your continued use means you accept the changes."
+          "item": "Keep your password confidential.",
+          "source_quote": "You must keep your password confidential."
         }
       ],
       "unclear_or_missing": [
-        "The specific period after which unused credits expire is not defined.",
-        "The conditions under which an account will be suspended are only described as a belief of a breach."
+        "The specific period for unused credits to expire is not defined.",
+        "The process for requesting a refund is not detailed."
       ],
-      "complexity_label": "Procedurally Dense Compliance",
-      "acknowledgment": "Document received."
+      "complexity_label": "Moderately Bureaucratic Stipulations",
+      "acknowledgment": "This document has been processed and its contents have been duly noted. The existence of this particular set of stipulations is hereby acknowledged."
     }
   }
 ]

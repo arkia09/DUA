@@ -2,45 +2,45 @@
   {
     "text": "Politely tell my manager I cannot take on the extra project this month because I am already at capacity",
     "raw": {
-      "subject": "Project Capacity Update",
-      "body": "Dear [Manager's name],\n\nThank you for offering me the opportunity to take on the extra project this month. After reviewing my current workload, I must respectfully decline as I am already at full capacity with existing commitments.\n\nBest regards,\n[Your name]",
+      "subject": "Project Capacity Status",
+      "body": "Dear [Manager's Name],\n\nThank you for offering me the opportunity to take on the extra project this month. After reviewing my current workload, I must respectfully inform you that I am currently at full capacity and would not be able to take on additional commitments at this time.\n\nBest regards,\n[Your name]",
       "alternatives": [
         {
-          "label": "More Direct",
-          "body": "Dear [Manager's name],\n\nI appreciate you thinking of me for the extra project. Unfortunately, I cannot take it on this month due to my current capacity levels.\n\nSincerely,\n[Your name]"
+          "label": "Direct",
+          "body": "Dear [Manager's Name],\n\nI appreciate you considering me for the additional project. However, due to my existing commitments this month, I am unable to take it on.\n\nSincerely,\n[Your name]"
         },
         {
-          "label": "Softer Approach",
-          "body": "Dear [Manager's name],\n\nThank you for bringing the extra project to my attention. At this time, my current workload is fully committed, so I won't be able to take it on this month. Perhaps we can revisit this next month.\n\nBest,\n[Your name]"
+          "label": "Softer",
+          "body": "Dear [Manager's Name],\n\nI am grateful for the offer regarding the extra project. At present, my schedule is fully allocated for the month, which means I would not be able to dedicate the necessary time to this new undertaking. Perhaps we can revisit this in a future cycle.\n\nKind regards,\n[Your name]"
         }
       ],
       "clarifying_questions": [],
       "incoming_questions": [],
-      "official_memo": "This required a simple refusal, which is surprisingly complex in its own right."
+      "official_memo": "The necessity of deploying the full apparatus of correspondence avoidance was warranted, as the delicate calibration between professional deference and absolute workload adherence requires meticulous bureaucratic framing."
     }
   },
   {
     "text": "Follow up with a recruiter who has not replied in a week, without sounding desperate",
     "raw": {
-      "subject": "Following up on [Job Title] Application",
-      "body": "Dear [Recruiter Name],\n\nI hope this email finds you well. I am writing to follow up on my application for the [Job Title] position, which I submitted on [Date Submitted]. I remain very interested in this opportunity and was hoping to learn about the next steps in the hiring process.\n\nThank you for your time and consideration. I look forward to hearing from you when you have a moment.\n\nSincerely,\n[Your name]",
+      "subject": "Following Up: [Job Title] Application",
+      "body": "Dear [Recruiter Name],\n\nI hope this email finds you well. I am writing to follow up on my application for the [Job Title] position. I remain very interested in this opportunity and was hoping to inquire about the status of my application. \n\nThank you for your time and consideration.\n\nSincerely,\n[Your name]",
       "alternatives": [
         {
-          "label": "Short",
-          "body": "Dear [Recruiter Name],\n\nI wanted to briefly follow up on my application for the [Job Title] role. I am still very enthusiastic about the opportunity and would appreciate an update on the timeline for next steps. \n\nBest regards,\n[Your name]"
+          "label": "Direct Follow-up",
+          "body": "Dear [Recruiter Name],\n\nI am writing to check in regarding my application for the [Job Title] role. Could you provide an update on the timeline for the next steps? I look forward to hearing from you.\n\nBest regards,\n[Your name]"
         },
         {
-          "label": "Softer",
-          "body": "Dear [Recruiter Name],\n\nI hope your week is going smoothly. I wanted to check in regarding the [Job Title] position. I enjoyed learning more about [Company Name] and am eager to hear about the progress of the hiring process at your convenience.\n\nThank you,\n[Your name]"
+          "label": "Softer Inquiry",
+          "body": "Dear [Recruiter Name],\n\nI hope your week is progressing smoothly. I wanted to briefly reiterate my strong interest in the [Job Title] position and see if there is any update regarding the hiring process. Please let me know if there is any further information I can provide on my end.\n\nThank you,\n[Your name]"
         }
       ],
       "clarifying_questions": [
-        "What is the title of the position you applied for?",
-        "What date did you submit your application?",
-        "What is the recruiter's name?"
+        "What is the specific job title you applied for?",
+        "When did you last communicate with the recruiter?",
+        "Do you have the recruiter's name?"
       ],
       "incoming_questions": [],
-      "official_memo": "This follow-up required the precise calibration of professional interest versus perceived desperation. It is now complete."
+      "official_memo": "The necessity of this correspondence arose from the temporal gap exceeding the customary threshold for professional acknowledgment. Such delays, while common in complex hiring matrices, mandate a measured, formalized inquiry to ensure the continuity of the applicant's professional trajectory within the established bureaucratic parameters."
     }
   },
   {
@@ -48,20 +48,21 @@
     "incoming": "Hi, can you come to the planning meeting on Thursday at 2? Also, did you get the budget file I sent last week? And who is covering the front desk while we are in there?",
     "raw": {
       "subject": "Re: Planning Meeting on Thursday",
-      "body": "Hello [Recipient Name],\n\nI can attend the planning meeting on Thursday, but I will only be able to stay for one hour. I have not yet seen the budget file you sent last week. Regarding the front desk coverage, I do not have that information.\n\nBest regards,\n[Your name]",
+      "body": "Dear [Recipient Name],\n\nI can attend the planning meeting on Thursday, but I will only be able to stay for one hour. Regarding the budget file, I have not yet seen it. I also require clarification on who will be covering the front desk during the meeting.\n\nBest regards,\n[Your name]",
       "alternatives": [
         {
-          "label": "More Direct",
-          "body": "Hello [Recipient Name],\n\nI can attend the Thursday meeting, but my availability is limited to one hour. I have not received the budget file. Please let me know who is covering the front desk.\n\nRegards,\n[Your name]"
+          "label": "Direct",
+          "body": "Dear [Recipient Name],\n\nI am available for the meeting on Thursday, but my availability is limited to one hour. I have not received the budget file. Please confirm who will cover the front desk.\n\nSincerely,\n[Your name]"
         },
         {
-          "label": "Softer",
-          "body": "Hello [Recipient Name],\n\nThank you for the invitation to the planning meeting. I am available on Thursday, though I must note I can only remain for an hour. I also wanted to confirm that I have not yet seen the budget file. Could you advise on who will be covering the front desk?\n\nSincerely,\n[Your name]"
+          "label": "Concise",
+          "body": "Dear [Recipient Name],\n\nI can meet Thursday, limited to one hour. I have not seen the budget file. Who is covering the front desk?\n\nRegards,\n[Your name]"
         }
       ],
       "clarifying_questions": [
-        "What time on Thursday would you like me to attend the meeting?",
-        "Who should be designated to cover the front desk?"
+        "What time on Thursday would be most appropriate for the one-hour attendance?",
+        "What is the specific name of the budget file?",
+        "Who is designated to cover the front desk?"
       ],
       "incoming_questions": [
         {
@@ -80,7 +81,7 @@
           "answered": false
         }
       ],
-      "official_memo": ""
+      "official_memo": "The necessity of this correspondence arose from the confluence of scheduling constraints, material acquisition deficiencies, and logistical staffing queries. Such multifaceted operational inquiries necessitate the deployment of the Office of Correspondence Avoidance to ensure comprehensive alignment before proceeding to the designated planning forum."
     }
   }
 ]
