@@ -1,0 +1,28 @@
+# Exported from Render on 2026-10-25T10:51:57Z
+version: "1"
+services:
+- type: web
+  name: dua-demo
+  runtime: python
+  repo: https://github.com/arkia09/DUA
+  plan: free
+  envVars:
+  - key: DJANGO_CSRF_TRUSTED_ORIGINS
+    sync: false
+  - key: DJANGO_ALLOWED_HOSTS
+    sync: false
+  - key: WIPE_ON_START
+    sync: false
+  - key: DJANGO_BEHIND_PROXY
+    sync: false
+  - key: DJANGO_SECRET_KEY
+    sync: false
+  - key: DJANGO_DEBUG
+    sync: false
+  - key: DEMO_MODE
+    sync: false
+  region: oregon
+  buildCommand: pip install -r requirements.txt && python manage.py collectstatic
+    --noinput && python manage.py migrate
+  startCommand: gunicorn dua.wsgi:application
+  autoDeployTrigger: commit
